@@ -130,11 +130,15 @@ details.t>summary::-webkit-details-marker{display:none}
 .toast{position:fixed;left:50%;bottom:24px;width:max-content;max-width:min(90vw,440px);text-align:center;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--card);padding:10px 18px;border-radius:14px;opacity:0;transition:.25s;pointer-events:none;z-index:30}
 .toast.on{opacity:1;transform:translateX(-50%)}
 .hdr-r{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.bstrip{display:flex;gap:8px;overflow-x:auto;padding:0 20px 10px;scrollbar-width:thin;scroll-snap-type:x proximity}
-.bstrip button{flex:none;width:84px;min-height:96px;scroll-snap-align:start;border:1.5px solid var(--line);background:var(--card);border-radius:16px;padding:6px 4px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:12px;line-height:1.2;color:var(--soft)}
-.bstrip button[aria-expanded=true]{border-color:var(--acc);background:var(--acc2);color:var(--ink)}
-.bstrip .t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-align:center}
-.bdrop{margin:0 20px 12px;border:1.5px solid var(--acc);border-radius:18px;background:var(--tint);padding:10px}
+.bstrip{padding:0 20px 6px}
+.bsec h3{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:500;margin:12px 2px 8px}.bsec h3 small{color:var(--soft);font-weight:400;font-size:13px;margin-left:auto}
+.bn{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:8px;background:var(--acc);color:var(--on);font-size:13px;font-weight:600}
+.bgrid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.btile{position:relative;min-height:112px;border:1.5px solid var(--line);background:var(--card);border-radius:16px;padding:14px 4px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:13px;line-height:1.2;color:var(--ink)}
+.btile[aria-expanded=true]{border-color:var(--acc);background:var(--acc2)}
+.btile .t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-align:center}
+.blv{position:absolute;left:6px;top:5px;font-size:11px;color:var(--soft);background:var(--tint);border-radius:7px;padding:0 5px}.blv.over{background:var(--warn);color:#fff}
+.bdrop{grid-column:1/-1;margin:2px 0 6px;border:1.5px solid var(--acc);border-radius:18px;background:var(--tint);padding:10px}
 .bdrop .bh{display:flex;align-items:center;gap:10px;margin:0 0 8px 2px}.bdrop .nm small{display:block;color:var(--soft);font-size:13px}
 .bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;max-height:380px;overflow-y:auto;padding:2px}
 .bfoot{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}.bfoot b{color:var(--acc)}
@@ -183,7 +187,6 @@ details.t>summary::-webkit-details-marker{display:none}
   <section class="card sticky" aria-labelledby="oh">
     <div class="chd"><h2 id="oh">ไอเทม</h2></div>
     <div class="bstrip" id="bstrip" aria-label="เครื่องผลิต"></div>
-    <div class="bdrop" id="bdrop" hidden></div>
     <div class="ohead"><input id="oname" aria-label="ชื่อออเดอร์" placeholder="ตั้งชื่อ เช่น รถส่งของ, เรือ, เควสเมือง" maxlength="40"><button class="btn pri" id="openPick">+ เพิ่มจากคลัง</button></div>
     <div class="donebar" id="donebar" hidden>ออเดอร์นี้ส่งแล้ว ไม่นับรวมในยอด “รวมที่ยังไม่ส่ง”</div>
     <ul class="olist" id="olist"></ul>
@@ -278,16 +281,29 @@ const valueOf=items=>{const sale=items.reduce((s,[id,q])=>s+(M[id].p||0)*q,0),xp
 
 /* ---------- orders ---------- */
 const renderChips=()=>{};
-/* building strip + dropdown */
-let BG=[];const bd={open:null,sel:new Set()};
+/* building groups + dropdown */
+const BLV={'Bakery':2,'Feed Mill':3,'Dairy':6,'Sugar Mill':7,'Popcorn Pot':8,'BBQ Grill':9,'Pie Oven':14,'Loom':17,'Sewing Machine':19,'Cake Oven':21,'Mine':24,'Smelter':24,'Juice Press':26,'Lure Workbench':27,'Ice Cream Maker':29,'Net Maker':30,'Doner Kebab Stand':32,'Jam Maker':35,'Jeweler':38,'Honey Extractor':39,'Coffee Kiosk':42,'Lobster Pool':44,'Soup Kitchen':46,'Candle Maker':48,'Flower Shop':49,'Duck Salon':50,'Candy Machine':51,'Sauce Maker':54,'Sushi Bar':56,'Salad Bar':58,'Sandwich Bar':61,'Smoothie Mixer':64,'Pasta Maker':67,'Essential Oils Lab':68,'Wok Kitchen':69,'Hat Maker':70,'Pasta Kitchen':72,'Hot Dog Stand':75,'Donut Maker':76,'Taco Kitchen':77,'Omelet Station':77,'Tea Stand':80,'Fondue Pot':81,'Bath Kiosk':84,'Deep Fryer':87,'Preservation Station':91,'Pottery Studio':94,'Fudge Shop':99,'Yogurt Maker':103,'Stew Pot':106,'Cupcake Maker':109,'Perfumerie':110,'Waffle Maker':114,'Porridge Bar':119,'Milkshake Bar':124};
+const BGRP=[['พืชไร่ & ต้นไม้',['Field','@fruit','Beehive tree','Squirrel House']],
+  ['อาหารสัตว์ & คอกสัตว์',['Feed Mill','Chicken','Cow','Pig','Sheep','Lamb','Goat']],
+  ['เหมือง & เตาหลอม',['Mine','Smelter']],
+  ['ตกปลา & ทะเลสาบ',['Lure Workbench','Fish','Net Maker','Lobster Pool','Duck Salon']],
+  ['เครื่องผลิตอื่นๆ',null]];
+const gkey=g=>g.cat==='fruit'?'@fruit':g.en;
+let BG=[],BGS=[];const bd={open:null,sel:new Set()};
 function buildBG(){const m=new Map();for(const i of D){if(i.cat==='special')continue;if(!m.has(i.bth))m.set(i.bth,[]);m.get(i.bth).push(i)}
-  BG=[...m].map(([b,its])=>({b,its:its.sort((x,y)=>(x.lv||0)-(y.lv||0)),lv:Math.min(...its.map(x=>x.lv||0))})).sort((x,y)=>x.lv-y.lv||x.b.localeCompare(y.b,'th'))}
-function renderStrip(){$('#bstrip').innerHTML=BG.map((g,k)=>`<button data-bopen="${k}" aria-expanded="${bd.open===k}" aria-label="${esc(g.b)} — ${g.its.length} ไอเทม">${bicon(g.b,52)}<span class="t">${esc(g.b)}</span></button>`).join('')}
-function renderDrop(){const el=$('#bdrop');if(bd.open==null){el.hidden=true;return}
-  const g=BG[bd.open],inOrd=new Set(cur().items.map(x=>x[0]));el.hidden=false;
-  el.innerHTML=`<div class="bh">${bicon(g.b,44)}<div class="nm"><b>${esc(g.b)}</b><small>ผลิตได้ ${g.its.length} ไอเทม · แตะเพื่อเลือก</small></div><button class="x" data-bclose aria-label="ปิด">×</button></div>
+  BG=[...m].map(([b,its])=>({b,en:its[0].b,cat:its[0].cat,its:its.sort((x,y)=>(x.lv||0)-(y.lv||0)),lv:BLV[its[0].b]??Math.min(...its.map(x=>x.lv||0))}));
+  const used=new Set(),listed=new Set(BGRP.flatMap(x=>x[1]||[]));
+  BGS=BGRP.map(([t,ord])=>{const gs=ord?BG.filter(g=>ord.includes(gkey(g))).sort((x,y)=>ord.indexOf(gkey(x))-ord.indexOf(gkey(y))):BG.filter(g=>!listed.has(gkey(g))).sort((x,y)=>x.lv-y.lv||x.b.localeCompare(y.b,'th'));return{t,gs}})}
+function dropHTML(g){const inOrd=new Set(cur().items.map(x=>x[0]));
+  return `<div class="bdrop" id="bdrop"><div class="bh">${bicon(g.b,44)}<div class="nm"><b>${esc(g.b)}</b><small>ผลิตได้ ${g.its.length} ไอเทม · แตะเพื่อเลือก</small></div><button class="x" data-bclose aria-label="ปิด">×</button></div>
   <div class="bgrid">${g.its.map(i=>`<button class="pc${bd.sel.has(i.id)?' sel':''}${overLv(i)?' over':''}" data-bpick="${esc(i.id)}" aria-pressed="${bd.sel.has(i.id)}"><span class="lv">Lv ${esc(i.lv??'-')}</span><span class="bx">✓</span>${icon(i,48)}<span class="th">${esc(i.th)}</span><span class="en">${esc(i.en)}</span>${overLv(i)?'<span class="ovl">เกินเลเวลฟาร์ม</span>':''}${inOrd.has(i.id)?'<span class="in">มีในรายการ</span>':''}</button>`).join('')}</div>
-  <div class="bfoot"><button class="btn sm" data-ball>${g.its.every(i=>bd.sel.has(i.id))?'ยกเลิกทั้งหมด':'เลือกทั้งหมด'}</button><span class="cnt ml">เลือกแล้ว <b>${bd.sel.size}</b></span><button class="btn pri" data-badd ${bd.sel.size?'':'disabled'}>เอาไอเทม</button></div>`}
+  <div class="bfoot"><button class="btn sm" data-ball>${g.its.every(i=>bd.sel.has(i.id))?'ยกเลิกทั้งหมด':'เลือกทั้งหมด'}</button><span class="cnt ml">เลือกแล้ว <b>${bd.sel.size}</b></span><button class="btn pri" data-badd ${bd.sel.size?'':'disabled'}>เอาไอเทม</button></div></div>`}
+function renderStrip(){const og=bd.open==null?null:BG[bd.open];
+  $('#bstrip').innerHTML=BGS.map((sec,si)=>{const n=sec.gs.length,oi=sec.gs.indexOf(og);
+    return `<section class="bsec"><h3><span class="bn">${si+1}</span>${sec.t} <small>${n} เครื่อง</small></h3><div class="bgrid3">`+sec.gs.map((g,i)=>{const k=BG.indexOf(g),open=k===bd.open;
+      let h=`<button class="btile" data-bopen="${k}" aria-expanded="${open}" aria-label="${esc(g.b)} — ${g.its.length} ไอเทม">${BLV[g.en]?`<span class="blv${st.lv&&BLV[g.en]>st.lv?' over':''}">Lv ${BLV[g.en]}</span>`:''}${bicon(g.b,56)}<span class="t">${esc(g.b)}</span></button>`;
+      if(oi>=0&&Math.floor(oi/3)===Math.floor(i/3)&&i===Math.min(Math.floor(i/3)*3+2,n-1))h+=dropHTML(og);return h}).join('')+`</div></section>`}).join('')}
+const renderDrop=renderStrip;
 function renderOrder(){
   const o=cur();renderChips();
   if(document.activeElement!==$('#oname'))$('#oname').value=o.name;
@@ -419,7 +435,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)r
   else if(t.id==='selAll'){const all=visible.length&&visible.every(i=>pk.sel.has(i.id));visible.forEach(i=>all?pk.sel.delete(i.id):pk.sel.add(i.id));renderGrid()}
   else if(t.id==='addSel'){let n=0;for(const id of pk.sel)if(!o.items.some(x=>x[0]===id)){o.items.push([id,1]);n++}const ov=[...pk.sel].filter(id=>overLv(M[id])).length;closeSheets();renderAll();toast((n?`เพิ่ม ${n} รายการแล้ว`:'อยู่ในออเดอร์แล้ว')+(ov?` · ⚠ ${ov} รายการเกินเลเวลฟาร์ม`:''))}
   else if('inc'in ds){o.items[ds.inc][1]++;renderAll()}
-  else if('bopen'in ds){const k=+ds.bopen;bd.open=bd.open===k?null:k;bd.sel.clear();renderStrip();renderDrop();if(bd.open!=null)$('#bdrop').scrollIntoView({block:'nearest',behavior:'smooth'})}
+  else if('bopen'in ds){const k=+ds.bopen;bd.open=bd.open===k?null:k;bd.sel.clear();renderStrip();renderDrop();if(bd.open!=null)$('#bdrop')?.scrollIntoView({block:'nearest',behavior:'smooth'})}
   else if('bclose'in ds){bd.open=null;bd.sel.clear();renderStrip();renderDrop()}
   else if('bpick'in ds){const id=ds.bpick;bd.sel.has(id)?bd.sel.delete(id):bd.sel.add(id);if(bd.sel.has(id)&&overLv(M[id]))toast(`⚠ ${M[id].th} ต้องใช้ Lv ${M[id].lv} แต่ฟาร์มของคุณ Lv ${st.lv} ยังซื้อหรือผลิตไม่ได้`);renderDrop()}
   else if('ball'in ds){const its=BG[bd.open].its,all=its.every(i=>bd.sel.has(i.id));its.forEach(i=>all?bd.sel.delete(i.id):bd.sel.add(i.id));renderDrop()}
@@ -447,7 +463,7 @@ document.addEventListener('change',e=>{const t=e.target;
   else if(t.dataset.stock!==undefined){const v=n0(t.value);if(v)st.stock[t.dataset.stock]=v;else delete st.stock[t.dataset.stock];const y=scrollY;renderResults();save();scrollTo(0,y)}
   else if(t.id==='lvSel'){pk.lv=t.value;renderGrid()}
   else if(t.id==='hideIn'){pk.hide=t.checked;renderGrid()}
-  else if(t.id==='myLv'){st.lv=n0(t.value)||null;renderAll();const n=st.lv?cur().items.filter(([id])=>overLv(M[id])).length:0;if(n)toast(`⚠ มี ${n} รายการในออเดอร์นี้ที่เกินเลเวลฟาร์ม`)}
+  else if(t.id==='myLv'){st.lv=n0(t.value)||null;renderAll();renderStrip();const n=st.lv?cur().items.filter(([id])=>overLv(M[id])).length:0;if(n)toast(`⚠ มี ${n} รายการในออเดอร์นี้ที่เกินเลเวลฟาร์ม`)}
   else if(t.id==='rvInd'){rv.ind=t.checked;renderRv()}
   else if(t.id==='rvUnl'){rv.unl=t.checked;renderRv()}
 });
