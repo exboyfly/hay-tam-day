@@ -17,7 +17,7 @@
 --line:light-dark(#f6d3e0,#4a3040);--tint:light-dark(#fdf3f7,#331f2b);--acc:light-dark(#e5487f,#ff7aa8);--acc2:light-dark(#fde2ec,#4b2738);
 --ok:light-dark(#2f9e5b,#5fd08b);--okbg:light-dark(#e6f6ec,#173326);--warn:light-dark(#d2562f,#ff9a73)}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
-*{box-sizing:border-box;min-width:0}
+*{box-sizing:border-box;min-width:0}[hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Kanit,"Noto Sans Thai",system-ui,sans-serif;overflow-x:clip}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
@@ -26,7 +26,7 @@ button{cursor:pointer}
 header{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 20px;margin-bottom:18px}
 h1{font-size:clamp(28px,5vw,40px);line-height:1.05;margin:0;font-weight:600;text-wrap:balance}
 .sub{margin:6px 0 0;color:var(--soft);font-weight:300}
-.lvbox{margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:6px 8px 6px 14px}
+.lvbox{display:flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:6px 8px 6px 14px}
 .lvbox input{width:64px;height:40px;border:0;background:var(--tint);border-radius:10px;text-align:center;font-size:16px}
 .grid2{display:grid;gap:18px;grid-template-columns:minmax(0,1fr)}
 @media(min-width:900px){.grid2{grid-template-columns:minmax(0,5fr) minmax(0,7fr)}.sticky{position:sticky;top:14px;align-self:start}}
@@ -123,7 +123,35 @@ details.t>summary::-webkit-details-marker{display:none}
 .sft .btn.pri{min-width:140px;min-height:52px;font-size:18px}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--card);padding:10px 18px;border-radius:14px;opacity:0;transition:.25s;pointer-events:none;z-index:30}
 .toast.on{opacity:1;transform:translateX(-50%)}
-@media(max-width:600px){.orow{flex-wrap:wrap;row-gap:6px}.orow .nm{flex-basis:calc(100% - 106px)}.orow .step{margin-left:58px}.orow .x{margin-left:auto}.rrow{flex-wrap:wrap}.rrow .nm{flex-basis:calc(100% - 60px)}.rrow .need{margin-left:56px;text-align:left}.rrow .have{margin-left:auto;flex-direction:row;gap:6px}.sum{gap:6px}.stat{padding:10px}}
+.hdr-r{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ochips{display:flex;gap:8px;overflow-x:auto;padding:0 20px 10px;scrollbar-width:thin}
+.ochips button{flex:none;min-height:48px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);padding:5px 14px;text-align:left;line-height:1.25}
+.ochips button b{font-weight:500}.ochips button small{display:block;font-size:12px;color:var(--soft);white-space:nowrap}
+.ochips button[aria-pressed=true]{border-color:var(--acc);background:var(--acc2)}
+.ochips button.done{opacity:.6}.ochips button.done b{text-decoration:line-through}
+.ochips .newo{border-style:dashed;color:var(--acc);font-weight:500}
+.ohead{display:flex;gap:8px;padding:2px 20px 8px;flex-wrap:wrap;align-items:center}
+.ohead input{flex:1 1 170px;height:46px;border-radius:14px;border:1.5px solid var(--line);background:var(--tint);padding:0 14px;font-size:17px;font-weight:500}
+.btn.sm{min-height:40px;padding:0 12px;font-size:14px}
+.btn.okb[aria-pressed=true]{background:var(--ok);border-color:var(--ok);color:#fff}
+.donebar{margin:0 20px 6px;padding:8px 12px;border-radius:12px;background:var(--okbg);color:var(--ok);font-size:14px}
+.val{margin:4px 20px 12px;border-radius:18px;background:var(--tint);padding:12px 14px}
+.val .vt{font-size:14px;font-weight:500;margin-bottom:6px}
+.val .vg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}
+.val .vg span{display:block;font-size:12px;color:var(--soft)}
+.val .vg b{font-size:20px;font-weight:600;white-space:nowrap}.val .vg small{font-size:12px;color:var(--soft)}
+.val .diff b{color:var(--ok)}.val .diff.neg b{color:var(--warn)}
+.val p{margin:10px 0 0;font-size:12px;color:var(--soft);line-height:1.45}
+.linkb{border:0;background:none;padding:0;text-align:left;display:block}
+.linkb b{text-decoration:underline dotted var(--soft);text-underline-offset:4px}
+.rvhead{display:flex;align-items:center;gap:12px;padding:12px 16px 4px;flex-wrap:wrap}
+.rvlist{flex:1;overflow-y:auto;padding:8px 16px 16px}
+#rvBody.pgrid{flex:1}
+.uses{flex:none;text-align:right;font-size:13px;color:var(--soft);max-width:9em}.uses b{color:var(--acc);font-size:16px;white-space:nowrap}
+.addb{flex:none;width:44px;height:44px;border-radius:12px;border:1.5px solid var(--acc);background:var(--card);color:var(--acc);font-size:22px}
+.pc .cnt2{font-size:11px;color:var(--acc)}
+.sheet{position:relative}
+@media(max-width:600px){.hdr-r{margin-left:0}.rvlist .rrow .uses{margin-left:56px;text-align:left;max-width:none}.rvlist .rrow .addb{margin-left:auto}.val .vg b{font-size:18px}.orow{flex-wrap:wrap;row-gap:6px}.orow .nm{flex-basis:calc(100% - 106px)}.orow .step{margin-left:58px}.orow .x{margin-left:auto}.rrow{flex-wrap:wrap}.rrow .nm{flex-basis:calc(100% - 60px)}.rrow .need{margin-left:56px;text-align:left}.rrow .have{margin-left:auto;flex-direction:row;gap:6px}.sum{gap:6px}.stat{padding:10px}}
 @media(prefers-reduced-motion:reduce){.bar i,.toast{transition:none}}
 </style>
 </head>
@@ -131,16 +159,24 @@ details.t>summary::-webkit-details-marker{display:none}
 <div class="wrap">
 <header>
   <div><h1>เช็กวัตถุดิบเควส Hay Day</h1><p class="sub">เลือกของที่ต้องส่ง แล้วดูว่าต้องเตรียมวัตถุดิบอะไร เท่าไร</p></div>
-  <label class="lvbox">เลเวลฟาร์ม <input id="myLv" type="number" min="1" max="200" inputmode="numeric" placeholder="—"></label>
+  <div class="hdr-r">
+    <button class="btn" id="rvOpen">ใช้ทำอะไรได้บ้าง?</button>
+    <label class="lvbox">เลเวลฟาร์ม <input id="myLv" type="number" min="1" max="200" inputmode="numeric" placeholder="—"></label>
+  </div>
 </header>
 <div class="grid2">
   <section class="card sticky" aria-labelledby="oh">
-    <div class="chd"><h2 id="oh">รายการที่ต้องส่ง</h2><span class="cnt" id="ocnt"></span><button class="btn pri ml" id="openPick">+ เพิ่มจากคลัง</button></div>
+    <div class="chd"><h2 id="oh">ออเดอร์ที่ต้องส่ง</h2></div>
+    <div class="ochips" id="ochips"></div>
+    <div class="ohead"><input id="oname" aria-label="ชื่อออเดอร์" placeholder="ตั้งชื่อ เช่น รถส่งของ, เรือ, เควสเมือง" maxlength="40"><button class="btn pri" id="openPick">+ เพิ่มจากคลัง</button></div>
+    <div class="donebar" id="donebar" hidden>ออเดอร์นี้ส่งแล้ว ไม่นับรวมในยอด “รวมที่ยังไม่ส่ง”</div>
     <ul class="olist" id="olist"></ul>
-    <div class="ofoot" id="ofoot"><button class="btn ghost" id="clearAll">ล้างรายการ</button><button class="btn ghost" id="clearStock">ล้างจำนวนที่มี</button></div>
+    <div class="val" id="val" hidden></div>
+    <div class="ofoot"><button class="btn sm okb" id="ordDone" aria-pressed="false">ส่งแล้ว</button><button class="btn sm ghost" id="ordDel">ลบออเดอร์</button><button class="btn sm ghost ml" id="clearStock">ล้างจำนวนที่มี</button></div>
   </section>
   <section class="card" aria-labelledby="rh">
     <div class="chd"><h2 id="rh">ต้องเตรียมอะไรบ้าง</h2></div>
+    <div class="seg scope" id="scope" aria-label="ขอบเขตการคำนวณ"></div>
     <div class="sum" id="sum"></div>
     <div class="bar"><i id="barI" style="width:0"></i></div>
     <div class="tabs" role="tablist">
@@ -153,21 +189,30 @@ details.t>summary::-webkit-details-marker{display:none}
     </div>
     <p class="mode-note" id="mnote"></p>
     <div class="pane" id="pane"></div>
-    <div class="copy"><button class="btn" id="copyBtn">คัดลอกรายการ</button><span class="cnt">ส่งต่อใน LINE หรือจดไว้ได้</span></div>
+    <div class="copy"><button class="btn" id="copyBtn">คัดลอกรายการ</button><span class="cnt">แตะชื่อวัตถุดิบเพื่อดูว่าใช้ทำอะไรได้อีก</span></div>
   </section>
 </div>
-<p class="note">ข้อมูลสูตรและเลเวลจาก <a href="https://hayday.fandom.com/wiki/Goods_List">Hay Day Wiki (Fandom) — Goods List</a> ดึงเมื่อ 7 ก.ค. 2026 · ชื่อภาษาไทยแปลเอง ไม่ใช่ชื่อทางการในเกม · เวลาผลิตเป็นเวลาพื้นฐาน (ยังไม่ลดจากการ mastery) · พืชไร่ 1 แปลงเก็บเกี่ยวได้ 2 ชิ้น</p>
+<p class="note">ข้อมูลสูตร เลเวล ราคา และ XP จาก <a href="https://hayday.fandom.com/wiki/Goods_List">Hay Day Wiki (Fandom) — Goods List</a> ดึงเมื่อ 7 ก.ค. 2026 · ชื่อภาษาไทยแปลเอง ไม่ใช่ชื่อทางการในเกม · เวลาผลิตเป็นเวลาพื้นฐาน (ยังไม่ลดจากการ mastery) · พืชไร่ 1 แปลงเก็บเกี่ยวได้ 2 ชิ้น</p>
 </div>
 
 <div class="ov" id="ov" role="dialog" aria-modal="true" aria-labelledby="ph">
   <div class="sheet">
-    <div class="shd"><h2 id="ph">เพิ่มจากคลัง Hay Day</h2><button class="x ml" id="closePick" aria-label="ปิด">×</button></div>
+    <div class="shd"><h2 id="ph">เพิ่มจากคลัง Hay Day</h2><button class="x ml" data-close aria-label="ปิด">×</button></div>
     <div class="chips" id="chips"></div>
     <div class="flt"><input type="search" id="q" placeholder="ค้นหา ชื่อไทย หรือ English..." autocomplete="off"><select id="lvSel" aria-label="เลเวล"></select></div>
-    <label class="chk"><input type="checkbox" id="hideIn"> ซ่อนที่อยู่ในรายการแล้ว</label>
+    <label class="chk"><input type="checkbox" id="hideIn"> ซ่อนที่อยู่ในออเดอร์นี้แล้ว</label>
     <div class="ghd"><b id="gTitle">ทั้งหมด</b><span class="cnt" id="gCnt"></span><button class="btn ml" id="selAll">เลือกทั้งหมดที่เห็น</button></div>
     <div class="pgrid" id="pgrid"></div>
     <div class="sft"><span>เลือกแล้ว <b id="selN">0</b> ชิ้น</span><button class="btn pri ml" id="addSel" disabled>ถัดไป ›</button></div>
+  </div>
+</div>
+
+<div class="ov" id="rvov" role="dialog" aria-modal="true" aria-labelledby="rvh">
+  <div class="sheet">
+    <div class="shd"><h2 id="rvh">ใช้ทำอะไรได้บ้าง?</h2><button class="x ml" data-close aria-label="ปิด">×</button></div>
+    <div id="rvSearch" class="flt" style="grid-template-columns:minmax(0,1fr);padding-bottom:12px;border-bottom:1.5px solid var(--line)"><input type="search" id="rvQ" placeholder="เลือกวัตถุดิบ เช่น ไข่ไก่ หรือ egg..." autocomplete="off"></div>
+    <div id="rvTop"></div>
+    <div id="rvBody" class="rvlist"></div>
   </div>
 </div>
 <div class="toast" id="toast" role="status"></div>
@@ -179,78 +224,106 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const CATS=[['all','ทั้งหมด','wheat'],['crop','พืชไร่','corn'],['fruit','ต้นไม้ & พุ่มผลไม้','apple'],['animal','ผลผลิตสัตว์','egg'],['goods','สินค้าแปรรูป','bread'],['mine','เหมือง & เครื่องประดับ','gold_bar'],['fish','ตกปลา & กับดัก','red_lure']];
 const CATTH={crop:'พืชไร่',fruit:'ผลไม้จากต้นไม้ & พุ่มไม้',animal:'ผลผลิตสัตว์',mine:'เหมือง',fish:'ตกปลา',goods:'สินค้าแปรรูป',special:'ไอเท็มพิเศษ'};
 const MODES={direct:'แสดงเฉพาะส่วนผสมที่ใช้ทำของในรายการโดยตรง',raw:'แตกสูตรจนถึงพืชไร่ ผลไม้ ผลผลิตสัตว์ และแร่ (ไม่แตกอาหารสัตว์)',farm:'แตกทุกอย่างจนถึงพืชไร่ รวมอาหารสัตว์ที่ต้องใช้เลี้ยงสัตว์ด้วย'};
-let D,M={},COLS,TILE;
-const st={order:[],stock:{},mode:'raw',tab:'raw',lv:null};
+const MODEN={direct:'ส่วนผสมตรง',raw:'ถึงผลผลิตดิบ',farm:'ถึงพืชไร่'};
+let D,M={},USES={},COLS,TILE;
+const st={orders:[],cur:null,scope:'cur',stock:{},mode:'raw',tab:'raw',lv:null};
 try{Object.assign(st,JSON.parse(localStorage.getItem('hdq')||'{}'))}catch(e){}
 const save=()=>{try{localStorage.setItem('hdq',JSON.stringify(st))}catch(e){}};
+const newOrder=()=>{const o={k:'o'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:'ออเดอร์ '+(st.orders.length+1),items:[],done:false};st.orders.push(o);st.cur=o.k;return o};
+if(Array.isArray(st.order)){if(!st.orders.length&&st.order.length)newOrder().items=st.order;delete st.order}
+if(!st.orders.length)newOrder();
+const cur=()=>st.orders.find(o=>o.k===st.cur)||(st.cur=st.orders[0].k,st.orders[0]);
+const pending=()=>st.orders.filter(o=>!o.done);
+const scopeItems=()=>{if(st.scope==='cur')return cur().items;const m=new Map();for(const o of pending())for(const[id,q]of o.items)m.set(id,(m.get(id)||0)+q);return[...m]};
 const icon=(it,s)=>{if(!it||it.ic<0)return `<span class="ic ph" style="width:${s}px;height:${s}px">${esc((it?.th||'?')[0])}</span>`;
   return `<span class="ic" style="width:${s}px;height:${s}px;background-image:url(icons.webp);background-size:${COLS*s}px auto;background-position:-${(it.ic%COLS)*s}px -${Math.floor(it.ic/COLS)*s}px"></span>`};
 const fmtT=m=>{if(!m)return '';m=Math.round(m);if(m<60)return m+' นาที';const d=Math.floor(m/1440),h=Math.floor(m%1440/60),n=m%60;return (d?d+' วัน ':'')+(h?h+' ชม. ':'')+(!d&&n?n+' นาที':'')};
+const fmtC=v=>Math.round(v).toLocaleString();
 const n0=v=>Math.max(0,parseInt(v,10)||0);
-const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),1600)};
+const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),1800)};
 
 /* ---------- calculation ---------- */
 const H={};
 const height=id=>{if(id in H)return H[id];H[id]=0;const it=M[id];let h=0;if(it)for(const[c]of it.ing)h=Math.max(h,1+height(c));return H[id]=h};
-function compute(){
-  const top=new Map();for(const[id,q]of st.order)top.set(id,(top.get(id)||0)+q);
-  const expand=id=>{const it=M[id];if(!it||!it.ing.length)return false;
-    if(st.mode==='direct')return top.has(id);if(st.mode==='raw'&&it.cat==='animal')return false;return true};
-  const dem=new Map(top),seen=new Set(top.keys()),make=[],leaf=[];
-  const queue=[...seen];
-  for(let i=0;i<queue.length;i++){const it=M[queue[i]];if(expand(queue[i]))for(const[c]of it.ing)if(!seen.has(c)){seen.add(c);queue.push(c)}}
-  const ordered=[...seen].sort((a,b)=>height(b)-height(a));
-  for(const id of ordered){const d=dem.get(id)||0;if(!d)continue;const have=n0(st.stock[id]);const net=Math.max(0,d-have);
+const expander=(top,mode)=>id=>{const it=M[id];if(!it||!it.ing.length)return false;if(mode==='direct')return top.has(id);if(mode==='raw'&&it.cat==='animal')return false;return true};
+function compute(items,useStock=true,mode=st.mode){
+  const top=new Map();for(const[id,q]of items)top.set(id,(top.get(id)||0)+q);
+  const expand=expander(top,mode);
+  const dem=new Map(top),seen=new Set(top.keys()),make=[],leaf=[],queue=[...seen];
+  for(let i=0;i<queue.length;i++){if(expand(queue[i]))for(const[c]of M[queue[i]].ing)if(!seen.has(c)){seen.add(c);queue.push(c)}}
+  for(const id of [...seen].sort((a,b)=>height(b)-height(a))){const d=dem.get(id)||0;if(!d)continue;const have=useStock?n0(st.stock[id]):0;const net=Math.max(0,d-have);
     if(expand(id)){make.push({id,d,have,net});for(const[c,q]of M[id].ing)dem.set(c,(dem.get(c)||0)+net*q)}
     else leaf.push({id,d,have,net})}
   return{make,leaf,top}
 }
+const valueOf=items=>{const sale=items.reduce((s,[id,q])=>s+(M[id].p||0)*q,0),xp=items.reduce((s,[id,q])=>s+(M[id].xp||0)*q,0);
+  const R=compute(items,false);const raw=R.leaf.reduce((s,r)=>s+(M[r.id].p||0)*r.d,0);const time=R.make.reduce((s,r)=>s+(M[r.id].t||0)*r.d,0);return{sale,xp,raw,diff:sale-raw,time}};
 
-/* ---------- order list ---------- */
+/* ---------- orders ---------- */
+function renderChips(){
+  $('#ochips').innerHTML=st.orders.map(o=>{const n=o.items.reduce((s,i)=>s+i[1],0);return `<button data-ord="${esc(o.k)}" aria-pressed="${o.k===st.cur}" class="${o.done?'done':''}"><b>${o.done?'✓ ':''}${esc(o.name)}</b><small>${n} ชิ้น · ${fmtC(valueOf(o.items).sale)} เหรียญ</small></button>`}).join('')+`<button id="newOrd" class="newo">+ ออเดอร์ใหม่</button>`}
 function renderOrder(){
-  const ol=$('#olist');$('#ocnt').textContent=st.order.length?st.order.length+' รายการ':'';
-  $('#ofoot').style.display=st.order.length?'':'none';
-  if(!st.order.length){ol.innerHTML=`<li class="empty">ยังไม่มีของในรายการ<br>เลือกของที่เควสหรือรถส่งของต้องการ<br><button class="btn pri" data-open>+ เพิ่มจากคลัง Hay Day</button></li>`;return}
-  ol.innerHTML=st.order.map(([id,q],i)=>{const it=M[id];return `<li class="orow">${icon(it,46)}<div class="nm"><b>${esc(it.th)}</b><small>${esc(it.en)} · Lv ${esc(it.lv??'-')} · ${esc(it.bth)}</small></div>
+  const o=cur();renderChips();
+  if(document.activeElement!==$('#oname'))$('#oname').value=o.name;
+  $('#donebar').hidden=!o.done;
+  const db=$('#ordDone');db.setAttribute('aria-pressed',o.done);db.textContent=o.done?'✓ ส่งแล้ว':'ทำเครื่องหมายว่าส่งแล้ว';
+  const ol=$('#olist');
+  if(!o.items.length){ol.innerHTML=`<li class="empty">ออเดอร์นี้ยังว่าง<br>เลือกของที่เควสหรือรถส่งของต้องการ<br><button class="btn pri" data-open>+ เพิ่มจากคลัง Hay Day</button></li>`;$('#val').hidden=true;return}
+  ol.innerHTML=o.items.map(([id,q],i)=>{const it=M[id];return `<li class="orow">${icon(it,46)}<div class="nm"><b>${esc(it.th)}</b><small>${esc(it.en)} · Lv ${esc(it.lv??'-')} · ${esc(it.bth)}${it.p?` · ${fmtC(it.p)} เหรียญ`:''}</small></div>
   <div class="step"><button data-dec="${i}" aria-label="ลด">−</button><input data-q="${i}" type="number" min="1" inputmode="numeric" value="${q}" aria-label="จำนวน ${esc(it.th)}"><button data-inc="${i}" aria-label="เพิ่ม">+</button></div>
-  <button class="x" data-del="${i}" aria-label="ลบ ${esc(it.th)}">×</button></li>`}).join('')
+  <button class="x" data-del="${i}" aria-label="ลบ ${esc(it.th)}">×</button></li>`}).join('');
+  const v=valueOf(o.items),pct=v.raw?Math.round(v.diff/v.raw*100):null;
+  $('#val').hidden=false;
+  $('#val').innerHTML=`<div class="vt">ความคุ้มของออเดอร์นี้</div><div class="vg">
+    <div><span>ราคาขายสูงสุดรวม</span><b>${fmtC(v.sale)}</b> <small>เหรียญ</small></div>
+    <div><span>มูลค่าวัตถุดิบ (${MODEN[st.mode]})</span><b>${fmtC(v.raw)}</b> <small>เหรียญ</small></div>
+    <div class="diff${v.diff<0?' neg':''}"><span>ส่วนต่างจากการแปรรูป</span><b>${v.diff>=0?'+':''}${fmtC(v.diff)}</b>${pct!==null?` <small>(${pct>=0?'+':''}${pct}%)</small>`:''}</div>
+    <div><span>XP รวม</span><b>${fmtC(v.xp)}</b>${v.time?` <small>· ผลิต ≈ ${fmtT(v.time)}</small>`:''}</div></div>
+    <p>คิดจากราคาขายสูงสุดในแผงขายของ (Roadside Shop) ตามวิกิ ใช้เทียบความคุ้มคร่าวๆ — รางวัลจริงจากรถส่งของ/เรือจะไม่เท่ากับตัวเลขนี้ · ไม่หักของที่มีแล้ว · เวลาผลิตคือเวลาเครื่องรวม ไม่รวมเวลาปลูกและเลี้ยงสัตว์</p>`
 }
 
 /* ---------- results ---------- */
+const nameBtn=it=>`<button class="linkb" data-rv="${esc(it.id)}"><b>${esc(it.th)}</b></button>`;
 const row=(r,extra='')=>{const it=M[r.id];const ok=r.net===0;
-  return `<div class="rrow${ok?' ok':''}">${icon(it,44)}<div class="nm"><b>${esc(it.th)}</b><small>${esc(it.en)}${extra}</small></div>
+  return `<div class="rrow${ok?' ok':''}">${icon(it,44)}<div class="nm">${nameBtn(it)}<small>${esc(it.en)}${extra}</small></div>
   <div class="need"><b>× ${r.d.toLocaleString()}</b><small>${ok?'ครบแล้ว':'ขาดอีก '+r.net.toLocaleString()}</small></div>
   <div class="have"><label for="h-${esc(r.id)}">มีแล้ว</label><input id="h-${esc(r.id)}" data-stock="${esc(r.id)}" type="number" min="0" inputmode="numeric" value="${r.have||''}" placeholder="0"></div>
   <span class="tag ${ok?'ok':'no'}">${ok?'✓ พร้อม':'ยังขาด'}</span></div>`};
 function renderResults(){
-  const R=compute();const L=R.leaf,ready=L.filter(r=>!r.net).length,miss=L.length-ready;
-  $('#sum').innerHTML=st.order.length?`<div class="stat"><b>${L.length}</b><span>วัตถุดิบทั้งหมด</span></div><div class="stat miss"><b>${miss}</b><span>ยังขาด</span></div><div class="stat ready"><b>${ready}</b><span>พร้อมแล้ว</span></div>`:'';
+  const pn=pending().length;
+  $('#scope').innerHTML=`<button data-scope="cur" aria-pressed="${st.scope==='cur'}">ออเดอร์นี้: ${esc(cur().name)}</button><button data-scope="all" aria-pressed="${st.scope==='all'}">รวมที่ยังไม่ส่ง (${pn} ออเดอร์)</button>`;
+  const items=scopeItems();const R=compute(items);const L=R.leaf,ready=L.filter(r=>!r.net).length,miss=L.length-ready;
+  $('#sum').innerHTML=items.length?`<div class="stat"><b>${L.length}</b><span>วัตถุดิบทั้งหมด</span></div><div class="stat miss"><b>${miss}</b><span>ยังขาด</span></div><div class="stat ready"><b>${ready}</b><span>พร้อมแล้ว</span></div>`:'';
   $('#barI').style.width=L.length?(ready/L.length*100)+'%':'0';
   document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===st.tab));
   document.querySelectorAll('#seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===st.mode));
   $('#mnote').textContent=MODES[st.mode];
   const P=$('#pane');
-  if(!st.order.length){P.innerHTML=`<p class="empty">เพิ่มของที่ต้องส่งทางซ้าย แล้วรายการวัตถุดิบจะขึ้นที่นี่ทันที</p>`;return}
+  if(!items.length){P.innerHTML=`<p class="empty">${st.scope==='all'?'ไม่มีออเดอร์ที่ยังไม่ส่ง หรือออเดอร์ยังว่างอยู่':'เพิ่มของที่ต้องส่งในออเดอร์นี้ แล้วรายการวัตถุดิบจะขึ้นที่นี่ทันที'}</p>`;return}
   if(st.tab==='raw'){
     const g={};for(const r of L){const c=M[r.id].cat;(g[c]=g[c]||[]).push(r)}
     P.innerHTML=['crop','fruit','animal','mine','fish','goods','special'].filter(c=>g[c]).map(c=>`<div class="grp">${CATTH[c]} <span class="cnt">${g[c].length}</span></div>`+
-      g[c].sort((a,b)=>(a.net===0)-(b.net===0)||b.d-a.d).map(r=>row(r,c==='crop'&&r.net?` · ปลูก ≈ ${Math.ceil(r.net/2)} แปลง`:(M[r.id].cat!=='crop'&&M[r.id].cat!=='fruit'?' · '+esc(M[r.id].bth):''))).join('')).join('')
+      g[c].sort((a,b)=>(a.net===0)-(b.net===0)||b.d-a.d).map(r=>row(r,c==='crop'&&r.net?` · ปลูก ≈ ${Math.ceil(r.net/2)} แปลง`:(c!=='crop'&&c!=='fruit'?' · '+esc(M[r.id].bth):''))).join('')).join('')
   }else if(st.tab==='make'){
     if(!R.make.length){P.innerHTML='<p class="empty">ไม่มีอะไรต้องผลิต</p>';return}
     const g={};for(const r of R.make){const b=M[r.id].bth;(g[b]=g[b]||[]).push(r)}
     P.innerHTML=Object.entries(g).sort((a,b)=>b[1].length-a[1].length).map(([b,rs])=>{const t=rs.reduce((s,r)=>s+(M[r.id].t||0)*r.net,0);
       return `<div class="bld"><h3>${esc(b)} <span>${rs.reduce((s,r)=>s+r.net,0)} ชิ้น${t?' · รวม ≈ '+fmtT(t):''}</span></h3>${rs.map(r=>row(r,M[r.id].t?' · '+fmtT(M[r.id].t)+'/ชิ้น':'')).join('')}</div>`}).join('')
   }else{
-    const expand=(id,top)=>{const it=M[id];if(!it||!it.ing.length)return false;if(st.mode==='direct')return top;if(st.mode==='raw'&&it.cat==='animal')return false;return true};
-    const node=(id,q,top,depth)=>{const it=M[id];const lab=`${icon(it,32)}<span class="tq">× ${q.toLocaleString()}</span> <span>${esc(it.th)}</span> <small class="cnt">${esc(it.en)}</small>`;
-      if(!expand(id,top)||depth>8)return `<div class="tleaf">${lab}</div>`;
-      return `<details class="t" ${depth<2?'open':''}><summary>${lab}</summary>${it.ing.map(([c,k])=>node(c,q*k,false,depth+1)).join('')}</details>`};
-    P.innerHTML=`<p class="mode-note" style="padding:0 8px 6px">ผังนี้แสดงจำนวนเต็มก่อนหักของที่มีแล้ว · แตะหัวข้อเพื่อพับ/ขยาย</p>`+st.order.map(([id,q])=>node(id,q,true,0)).join('')
+    const expand=expander(R.top,st.mode);
+    const node=(id,q,depth)=>{const it=M[id];const lab=`${icon(it,32)}<span class="tq">× ${q.toLocaleString()}</span> <span>${esc(it.th)}</span> <small class="cnt">${esc(it.en)}</small>`;
+      if(!expand(id)||(depth>0&&st.mode==='direct')||depth>8)return `<div class="tleaf">${lab}</div>`;
+      return `<details class="t" ${depth<2?'open':''}><summary>${lab}</summary>${it.ing.map(([c,k])=>node(c,q*k,depth+1)).join('')}</details>`};
+    P.innerHTML=`<p class="mode-note" style="padding:0 8px 6px">ผังนี้แสดงจำนวนเต็มก่อนหักของที่มีแล้ว · แตะหัวข้อเพื่อพับ/ขยาย</p>`+items.map(([id,q])=>node(id,q,0)).join('')
   }
 }
 const renderAll=()=>{renderOrder();renderResults();save()};
 
-/* ---------- picker ---------- */
+/* ---------- sheets ---------- */
+const openSheet=el=>{el.classList.add('on');document.body.style.overflow='hidden'};
+const closeSheets=()=>{document.querySelectorAll('.ov.on').forEach(e=>e.classList.remove('on'));document.body.style.overflow=''};
+
+/* picker */
 const pk={cat:'all',q:'',lv:'all',hide:false,sel:new Set()};
 let visible=[];
 function buildPicker(){
@@ -258,58 +331,101 @@ function buildPicker(){
   $('#chips').innerHTML=CATS.map(([k,t,ic])=>`<button data-cat="${k}" aria-pressed="${k===pk.cat}">${icon(M[ic],36)}${t} <em>${k==='all'?pool.length:pool.filter(i=>i.cat===k).length}</em></button>`).join('');
   const my=st.lv?`<option value="my">ถึงเลเวลฉัน (${st.lv})</option>`:'';
   $('#lvSel').innerHTML=`<option value="all">ทุกเลเวล</option>${my}`+Array.from({length:11},(_,i)=>`<option value="${i}">Lv ${i*10||1}–${i*10+9}</option>`).join('');
-  $('#lvSel').value=(pk.lv==='my'&&!st.lv)?'all':pk.lv;
+  if(pk.lv==='my'&&!st.lv)pk.lv='all';$('#lvSel').value=pk.lv;
+  $('#ph').textContent='เพิ่มลง “'+cur().name+'”';
 }
 function renderGrid(){
-  const q=pk.q.trim().toLowerCase(),inOrd=new Set(st.order.map(o=>o[0]));
+  const q=pk.q.trim().toLowerCase(),inOrd=new Set(cur().items.map(o=>o[0]));
   visible=D.filter(i=>i.cat!=='special'&&(pk.cat==='all'||i.cat===pk.cat)&&(!q||i.th.includes(q)||i.en.toLowerCase().includes(q)||i.bth.includes(q)||i.b.toLowerCase().includes(q))
     &&(pk.lv==='all'||(pk.lv==='my'?(i.lv||0)<=st.lv:Math.floor((i.lv||0)/10)==pk.lv))&&!(pk.hide&&inOrd.has(i.id))).sort((a,b)=>(a.lv||0)-(b.lv||0));
   $('#gTitle').textContent=CATS.find(c=>c[0]===pk.cat)[1];$('#gCnt').textContent=visible.length+' รายการ';
   $('#selAll').textContent=`เลือกทั้งหมดที่เห็น (${visible.length})`;
-  $('#pgrid').innerHTML=visible.length?visible.map(i=>`<button class="pc${pk.sel.has(i.id)?' sel':''}" data-pick="${esc(i.id)}" aria-pressed="${pk.sel.has(i.id)}"><span class="lv">Lv ${esc(i.lv??'-')}</span><span class="bx">✓</span>${icon(i,64)}<span class="th">${esc(i.th)}</span><span class="en">${esc(i.en)}</span>${inOrd.has(i.id)?'<span class="in">ในรายการ</span>':''}</button>`).join('')
+  $('#pgrid').innerHTML=visible.length?visible.map(i=>`<button class="pc${pk.sel.has(i.id)?' sel':''}" data-pick="${esc(i.id)}" aria-pressed="${pk.sel.has(i.id)}"><span class="lv">Lv ${esc(i.lv??'-')}</span><span class="bx">✓</span>${icon(i,64)}<span class="th">${esc(i.th)}</span><span class="en">${esc(i.en)}</span>${inOrd.has(i.id)?'<span class="in">ในออเดอร์</span>':''}</button>`).join('')
     :'<p class="empty" style="grid-column:1/-1">ไม่พบสินค้าที่ตรงกับการค้นหา</p>';
   updSel()
 }
 const updSel=()=>{$('#selN').textContent=pk.sel.size;$('#addSel').disabled=!pk.sel.size};
-const openPick=()=>{pk.sel.clear();buildPicker();renderGrid();$('#ov').classList.add('on');document.body.style.overflow='hidden';setTimeout(()=>$('#q').focus({preventScroll:true}),50)};
-const closePick=()=>{$('#ov').classList.remove('on');document.body.style.overflow=''};
+const openPick=()=>{pk.sel.clear();buildPicker();renderGrid();openSheet($('#ov'));setTimeout(()=>$('#q').focus({preventScroll:true}),50)};
+
+/* reverse lookup */
+const rv={id:null,q:'',ind:false,unl:false};
+function usesOf(id){const res=new Map(),dep={[id]:0},queue=[id];
+  for(let i=0;i<queue.length;i++){const n=queue[i];for(const[p,q]of USES[n]||[])if(!res.has(p)&&p!==id){res.set(p,{id:p,depth:dep[n]+1,qty:n===id?q:null,via:n===id?null:n});dep[p]=dep[n]+1;queue.push(p)}}
+  return[...res.values()]}
+function renderRv(){
+  $('#rvSearch').hidden=!!rv.id;
+  if(!rv.id){
+    const q=rv.q.trim().toLowerCase();
+    const list=D.filter(i=>USES[i.id]&&(!q||i.th.includes(q)||i.en.toLowerCase().includes(q))).sort((a,b)=>(a.lv||0)-(b.lv||0));
+    $('#rvTop').innerHTML=`<div class="ghd"><b>เลือกวัตถุดิบ</b><span class="cnt">${list.length} รายการ</span></div>`;
+    $('#rvBody').className='pgrid';
+    $('#rvBody').innerHTML=list.length?list.map(i=>`<button class="pc" data-rvpick="${esc(i.id)}"><span class="lv">Lv ${esc(i.lv??'-')}</span>${icon(i,56)}<span class="th">${esc(i.th)}</span><span class="en">${esc(i.en)}</span><span class="cnt2">ใช้ทำ ${USES[i.id].length} อย่าง</span></button>`).join(''):'<p class="empty" style="grid-column:1/-1">ไม่พบวัตถุดิบ</p>';
+    return}
+  const it=M[rv.id],all=usesOf(rv.id),direct=all.filter(u=>u.depth===1);
+  let list=rv.ind?all:direct;if(rv.unl&&st.lv)list=list.filter(u=>(M[u.id].lv||0)<=st.lv);
+  list.sort((a,b)=>a.depth-b.depth||(M[a.id].lv||0)-(M[b.id].lv||0));
+  $('#rvTop').innerHTML=`<div class="rvhead"><button class="btn sm" id="rvBack">‹ วัตถุดิบอื่น</button>${icon(it,52)}<div class="nm"><b>${esc(it.th)}</b><small>${esc(it.en)} · ใช้ทำได้โดยตรง ${direct.length} อย่าง · รวมทางอ้อม ${all.length} อย่าง</small></div></div>
+    <div class="chk" style="flex-wrap:wrap;gap:6px 18px;padding-top:10px"><label class="chk" style="padding:0;border:0"><input type="checkbox" id="rvInd" ${rv.ind?'checked':''}> รวมทางอ้อม</label>${st.lv?`<label class="chk" style="padding:0;border:0"><input type="checkbox" id="rvUnl" ${rv.unl?'checked':''}> เฉพาะที่ปลดล็อก (Lv ≤ ${st.lv})</label>`:'<span>ใส่เลเวลฟาร์มด้านบนเพื่อกรองของที่ปลดล็อกแล้ว</span>'}</div>`;
+  $('#rvBody').className='rvlist';
+  $('#rvBody').innerHTML=list.length?list.map(u=>{const p=M[u.id];return `<div class="rrow">${icon(p,44)}<div class="nm"><b>${esc(p.th)}</b><small>${esc(p.en)} · Lv ${esc(p.lv??'-')} · ${esc(p.bth)}${p.p?` · ${fmtC(p.p)} เหรียญ`:''}</small></div>
+    <div class="uses">${u.qty?`ใช้ <b>× ${u.qty}</b>`:`ผ่าน ${esc(M[u.via].th)}`}</div><button class="addb" data-addone="${esc(u.id)}" aria-label="เพิ่ม ${esc(p.th)} ลงออเดอร์">+</button></div>`}).join('')
+    :'<p class="empty">ไม่มีสินค้าที่ตรงเงื่อนไข</p>'
+}
+const openRv=id=>{rv.id=id||null;renderRv();openSheet($('#rvov'));if(!id)setTimeout(()=>$('#rvQ').focus({preventScroll:true}),50)};
 
 /* ---------- events ---------- */
-document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;const ds=t.dataset;
+const arm=(t,label,fn)=>{if(t.dataset.arm){delete t.dataset.arm;fn()}else{t.dataset.arm=1;t.textContent='แตะอีกครั้งเพื่อยืนยัน';setTimeout(()=>{if(t.dataset.arm){delete t.dataset.arm;t.textContent=label}},2500)}};
+document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;const ds=t.dataset,o=cur();
   if(t.id==='openPick'||'open'in ds)openPick();
-  else if(t.id==='closePick')closePick();
+  else if('close'in ds)closeSheets();
   else if('cat'in ds){pk.cat=ds.cat;document.querySelectorAll('#chips button').forEach(b=>b.setAttribute('aria-pressed',b===t));renderGrid()}
   else if('pick'in ds){const id=ds.pick;pk.sel.has(id)?pk.sel.delete(id):pk.sel.add(id);t.classList.toggle('sel');t.setAttribute('aria-pressed',pk.sel.has(id));updSel()}
   else if(t.id==='selAll'){const all=visible.length&&visible.every(i=>pk.sel.has(i.id));visible.forEach(i=>all?pk.sel.delete(i.id):pk.sel.add(i.id));renderGrid()}
-  else if(t.id==='addSel'){let n=0;for(const id of pk.sel)if(!st.order.some(o=>o[0]===id)){st.order.push([id,1]);n++}closePick();renderAll();toast(n?`เพิ่ม ${n} รายการแล้ว`:'อยู่ในรายการแล้ว')}
-  else if('inc'in ds){st.order[ds.inc][1]++;renderAll()}
-  else if('dec'in ds){const o=st.order[ds.dec];if(o[1]>1){o[1]--;renderAll()}}
-  else if('del'in ds){st.order.splice(ds.del,1);renderAll()}
+  else if(t.id==='addSel'){let n=0;for(const id of pk.sel)if(!o.items.some(x=>x[0]===id)){o.items.push([id,1]);n++}closeSheets();renderAll();toast(n?`เพิ่ม ${n} รายการแล้ว`:'อยู่ในออเดอร์แล้ว')}
+  else if('inc'in ds){o.items[ds.inc][1]++;renderAll()}
+  else if('dec'in ds){const x=o.items[ds.dec];if(x[1]>1){x[1]--;renderAll()}}
+  else if('del'in ds){o.items.splice(ds.del,1);renderAll()}
+  else if('ord'in ds){st.cur=ds.ord;renderAll()}
+  else if(t.id==='newOrd'){newOrder();renderAll();const n=$('#oname');n.focus();n.select()}
+  else if(t.id==='ordDone'){o.done=!o.done;renderAll();toast(o.done?`“${o.name}” ส่งแล้ว — ไม่นับในยอดรวม`:`ยกเลิกสถานะส่งแล้ว`)}
+  else if(t.id==='ordDel')arm(t,'ลบออเดอร์',()=>{st.orders=st.orders.filter(x=>x!==o);if(!st.orders.length)newOrder();st.cur=st.orders[0].k;t.textContent='ลบออเดอร์';renderAll();toast('ลบออเดอร์แล้ว')});
+  else if('scope'in ds){st.scope=ds.scope;renderResults();save()}
   else if('tab'in ds){st.tab=ds.tab;renderResults();save()}
-  else if('mode'in ds){st.mode=ds.mode;renderResults();save()}
-  else if(t.id==='clearAll'){if(t.dataset.arm){st.order=[];delete t.dataset.arm;t.textContent='ล้างรายการ';renderAll()}else{t.dataset.arm=1;t.textContent='แตะอีกครั้งเพื่อยืนยัน';setTimeout(()=>{delete t.dataset.arm;t.textContent='ล้างรายการ'},2500)}}
+  else if('mode'in ds){st.mode=ds.mode;renderAll()}
   else if(t.id==='clearStock'){st.stock={};renderAll();toast('ล้างจำนวนที่มีแล้ว')}
   else if(t.id==='copyBtn')copyList();
+  else if(t.id==='rvOpen')openRv(null);
+  else if('rv'in ds)openRv(ds.rv);
+  else if('rvpick'in ds){rv.id=ds.rvpick;renderRv();$('#rvBody').scrollTop=0}
+  else if(t.id==='rvBack'){rv.id=null;renderRv()}
+  else if('addone'in ds){const x=o.items.find(i=>i[0]===ds.addone);x?x[1]++:o.items.push([ds.addone,1]);renderAll();toast(`เพิ่ม ${M[ds.addone].th} ลง “${o.name}” แล้ว`)}
 });
 document.addEventListener('change',e=>{const t=e.target;
-  if(t.dataset.q!==undefined){st.order[t.dataset.q][1]=Math.max(1,n0(t.value));renderAll()}
+  if(t.dataset.q!==undefined){cur().items[t.dataset.q][1]=Math.max(1,n0(t.value));renderAll()}
   else if(t.dataset.stock!==undefined){const v=n0(t.value);if(v)st.stock[t.dataset.stock]=v;else delete st.stock[t.dataset.stock];const y=scrollY;renderResults();save();scrollTo(0,y)}
   else if(t.id==='lvSel'){pk.lv=t.value;renderGrid()}
   else if(t.id==='hideIn'){pk.hide=t.checked;renderGrid()}
   else if(t.id==='myLv'){st.lv=n0(t.value)||null;save()}
+  else if(t.id==='rvInd'){rv.ind=t.checked;renderRv()}
+  else if(t.id==='rvUnl'){rv.unl=t.checked;renderRv()}
 });
 $('#q').addEventListener('input',e=>{pk.q=e.target.value;renderGrid()});
-$('#ov').addEventListener('click',e=>{if(e.target.id==='ov')closePick()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#ov').classList.contains('on'))closePick()});
-function copyList(){const R=compute();
-  const lines=['เควส Hay Day — ของที่ต้องส่ง',...st.order.map(([id,q])=>`• ${M[id].th} × ${q}`),'','วัตถุดิบที่ต้องเตรียม ('+({direct:'ส่วนผสมตรง',raw:'ถึงผลผลิตดิบ',farm:'ถึงพืชไร่'})[st.mode]+')',
+$('#rvQ').addEventListener('input',e=>{rv.q=e.target.value;renderRv()});
+$('#oname').addEventListener('input',e=>{cur().name=e.target.value.trim()||'ออเดอร์';renderChips();renderResults();save()});
+document.querySelectorAll('.ov').forEach(ov=>ov.addEventListener('click',e=>{if(e.target===ov)closeSheets()}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheets()});
+function copyList(){const items=scopeItems(),R=compute(items);
+  const head=st.scope==='all'?pending().filter(o=>o.items.length).flatMap(o=>[`【${o.name}】`,...o.items.map(([id,q])=>`• ${M[id].th} × ${q}`)]):[`【${cur().name}】`,...items.map(([id,q])=>`• ${M[id].th} × ${q}`)];
+  const lines=['เควส Hay Day — ของที่ต้องส่ง',...head,'','วัตถุดิบที่ต้องเตรียม ('+MODEN[st.mode]+')',
     ...R.leaf.map(r=>`${r.net?'☐':'☑'} ${M[r.id].th} × ${r.d}${r.have?` (มี ${r.have}${r.net?`, ขาด ${r.net}`:''})`:''}`)];
-  if(R.make.length)lines.push('','ต้องผลิต',...R.make.filter(r=>r.net).map(r=>`• ${M[r.id].th} × ${r.net} — ${M[r.id].bth}`));
+  if(R.make.some(r=>r.net))lines.push('','ต้องผลิต',...R.make.filter(r=>r.net).map(r=>`• ${M[r.id].th} × ${r.net} — ${M[r.id].bth}`));
   const txt=lines.join('\n');
   (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast('คัดลอกแล้ว'),()=>toast('คัดลอกไม่ได้ในหน้านี้'))}
 
 fetch('data.json').then(r=>r.json()).then(j=>{D=j.items;COLS=j.cols;TILE=j.tile;D.forEach(i=>M[i.id]=i);
-  st.order=st.order.filter(o=>M[o[0]]);if(st.lv)$('#myLv').value=st.lv;renderAll()})
+  for(const i of D)for(const[c,q]of i.ing)(USES[c]=USES[c]||[]).push([i.id,q]);
+  for(const o of st.orders)o.items=o.items.filter(x=>M[x[0]]);
+  if(st.lv)$('#myLv').value=st.lv;renderAll()})
  .catch(()=>{$('#pane').innerHTML='<p class="empty">โหลดข้อมูลไม่สำเร็จ ลองรีเฟรชหน้าอีกครั้ง</p>'});
 }
 </script>
