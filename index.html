@@ -331,8 +331,8 @@ const cur=()=>st.orders.find(o=>o.k===st.cur)||(st.cur=st.orders[0].k,st.orders[
 const pending=()=>st.orders.filter(o=>!o.done);
 const scopeItems=()=>{if(st.scope==='cur')return cur().items;const m=new Map();for(const o of pending())for(const[id,q]of o.items)m.set(id,(m.get(id)||0)+q);return[...m]};
 const icon=(it,s)=>{if(!it||it.ic<0)return `<span class="ic ph" style="width:${s}px;height:${s}px">${esc((it?.th||'?')[0])}</span>`;
-  return `<span class="ic" style="width:${s}px;height:${s}px;background-image:url(icons.webp);background-size:${COLS*s}px auto;background-position:-${(it.ic%COLS)*s}px -${Math.floor(it.ic/COLS)*s}px"></span>`};
-const bicon=(b,s)=>{const k=BL[b];if(k==null)return '';return `<span class="ic bi" style="width:${s}px;height:${s}px;background-image:url(bldg.webp);background-size:${BC*s}px auto;background-position:-${(k%BC)*s}px -${Math.floor(k/BC)*s}px"></span>`};
+  return `<span class="ic" style="width:${s}px;height:${s}px;background-image:url(icons-v2.webp);background-size:${COLS*s}px auto;background-position:-${(it.ic%COLS)*s}px -${Math.floor(it.ic/COLS)*s}px"></span>`};
+const bicon=(b,s)=>{const k=BL[b];if(k==null)return '';return `<span class="ic bi" style="width:${s}px;height:${s}px;background-image:url(bldg-v2.webp);background-size:${BC*s}px auto;background-position:-${(k%BC)*s}px -${Math.floor(k/BC)*s}px"></span>`};
 const fmtT=m=>{if(!m)return '';m=Math.round(m);if(m<60)return m+' นาที';const d=Math.floor(m/1440),h=Math.floor(m%1440/60),n=m%60;return (d?d+' วัน ':'')+(h?h+' ชม. ':'')+(!d&&n?n+' นาที':'')};
 const fmtC=v=>Math.round(v).toLocaleString();
 const n0=v=>Math.max(0,parseInt(v,10)||0);
@@ -570,7 +570,7 @@ function copyList(){const items=scopeItems(),R=compute(items);
   const txt=lines.join('\n');
   (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast('คัดลอกแล้ว'),()=>toast('คัดลอกไม่ได้ในหน้านี้'))}
 
-fetch('data.json').then(r=>r.json()).then(j=>{D=j.items;COLS=j.cols;TILE=j.tile;BC=j.bcols;BT=j.btile;BL=j.bldg||{};D.forEach(i=>M[i.id]=i);
+fetch('data-v2.json',{cache:'no-cache'}).then(r=>r.json()).then(j=>{D=j.items;COLS=j.cols;TILE=j.tile;BC=j.bcols;BT=j.btile;BL=j.bldg||{};D.forEach(i=>M[i.id]=i);
   for(const i of D)for(const[c,q]of i.ing)(USES[c]=USES[c]||[]).push([i.id,q]);
   buildBG();renderStrip();
   for(const o of st.orders)o.items=o.items.filter(x=>M[x[0]]);
