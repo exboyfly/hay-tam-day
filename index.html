@@ -130,6 +130,14 @@ details.t>summary::-webkit-details-marker{display:none}
 .toast{position:fixed;left:50%;bottom:24px;width:max-content;max-width:min(90vw,440px);text-align:center;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--card);padding:10px 18px;border-radius:14px;opacity:0;transition:.25s;pointer-events:none;z-index:30}
 .toast.on{opacity:1;transform:translateX(-50%)}
 .hdr-r{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.bstrip{display:flex;gap:8px;overflow-x:auto;padding:0 20px 10px;scrollbar-width:thin;scroll-snap-type:x proximity}
+.bstrip button{flex:none;width:84px;min-height:96px;scroll-snap-align:start;border:1.5px solid var(--line);background:var(--card);border-radius:16px;padding:6px 4px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:12px;line-height:1.2;color:var(--soft)}
+.bstrip button[aria-expanded=true]{border-color:var(--acc);background:var(--acc2);color:var(--ink)}
+.bstrip .t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-align:center}
+.bdrop{margin:0 20px 12px;border:1.5px solid var(--acc);border-radius:18px;background:var(--tint);padding:10px}
+.bdrop .bh{display:flex;align-items:center;gap:10px;margin:0 0 8px 2px}.bdrop .nm small{display:block;color:var(--soft);font-size:13px}
+.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;max-height:380px;overflow-y:auto;padding:2px}
+.bfoot{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}.bfoot b{color:var(--acc)}
 .ochips{display:flex;gap:8px;overflow-x:auto;padding:0 20px 10px;scrollbar-width:thin}
 .ochips button{flex:none;min-height:48px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);padding:5px 14px;text-align:left;line-height:1.25}
 .ochips button b{font-weight:500}.ochips button small{display:block;font-size:12px;color:var(--soft);white-space:nowrap}
@@ -174,7 +182,8 @@ details.t>summary::-webkit-details-marker{display:none}
 <div class="grid2">
   <section class="card sticky" aria-labelledby="oh">
     <div class="chd"><h2 id="oh">ไอเทม</h2></div>
-    <div class="ochips" id="ochips"></div>
+    <div class="bstrip" id="bstrip" aria-label="เครื่องผลิต"></div>
+    <div class="bdrop" id="bdrop" hidden></div>
     <div class="ohead"><input id="oname" aria-label="ชื่อออเดอร์" placeholder="ตั้งชื่อ เช่น รถส่งของ, เรือ, เควสเมือง" maxlength="40"><button class="btn pri" id="openPick">+ เพิ่มจากคลัง</button></div>
     <div class="donebar" id="donebar" hidden>ออเดอร์นี้ส่งแล้ว ไม่นับรวมในยอด “รวมที่ยังไม่ส่ง”</div>
     <ul class="olist" id="olist"></ul>
@@ -268,8 +277,17 @@ const valueOf=items=>{const sale=items.reduce((s,[id,q])=>s+(M[id].p||0)*q,0),xp
   const R=compute(items,false);const raw=R.leaf.reduce((s,r)=>s+(M[r.id].p||0)*r.d,0);const time=R.make.reduce((s,r)=>s+(M[r.id].t||0)*r.d,0);return{sale,xp,raw,diff:sale-raw,time}};
 
 /* ---------- orders ---------- */
-function renderChips(){
-  $('#ochips').innerHTML=st.orders.map(o=>{const n=o.items.reduce((s,i)=>s+i[1],0);return `<button data-ord="${esc(o.k)}" aria-pressed="${o.k===st.cur}" class="${o.done?'done':''}"><b>${o.done?'✓ ':''}${esc(o.name)}</b><small>${n} ชิ้น · ${fmtC(valueOf(o.items).sale)} เหรียญ</small></button>`}).join('')+`<button id="newOrd" class="newo">+ ออเดอร์ใหม่</button>`}
+const renderChips=()=>{};
+/* building strip + dropdown */
+let BG=[];const bd={open:null,sel:new Set()};
+function buildBG(){const m=new Map();for(const i of D){if(i.cat==='special')continue;if(!m.has(i.bth))m.set(i.bth,[]);m.get(i.bth).push(i)}
+  BG=[...m].map(([b,its])=>({b,its:its.sort((x,y)=>(x.lv||0)-(y.lv||0)),lv:Math.min(...its.map(x=>x.lv||0))})).sort((x,y)=>x.lv-y.lv||x.b.localeCompare(y.b,'th'))}
+function renderStrip(){$('#bstrip').innerHTML=BG.map((g,k)=>`<button data-bopen="${k}" aria-expanded="${bd.open===k}" aria-label="${esc(g.b)} — ${g.its.length} ไอเทม">${bicon(g.b,52)}<span class="t">${esc(g.b)}</span></button>`).join('')}
+function renderDrop(){const el=$('#bdrop');if(bd.open==null){el.hidden=true;return}
+  const g=BG[bd.open],inOrd=new Set(cur().items.map(x=>x[0]));el.hidden=false;
+  el.innerHTML=`<div class="bh">${bicon(g.b,44)}<div class="nm"><b>${esc(g.b)}</b><small>ผลิตได้ ${g.its.length} ไอเทม · แตะเพื่อเลือก</small></div><button class="x" data-bclose aria-label="ปิด">×</button></div>
+  <div class="bgrid">${g.its.map(i=>`<button class="pc${bd.sel.has(i.id)?' sel':''}${overLv(i)?' over':''}" data-bpick="${esc(i.id)}" aria-pressed="${bd.sel.has(i.id)}"><span class="lv">Lv ${esc(i.lv??'-')}</span><span class="bx">✓</span>${icon(i,48)}<span class="th">${esc(i.th)}</span><span class="en">${esc(i.en)}</span>${overLv(i)?'<span class="ovl">เกินเลเวลฟาร์ม</span>':''}${inOrd.has(i.id)?'<span class="in">มีในรายการ</span>':''}</button>`).join('')}</div>
+  <div class="bfoot"><button class="btn sm" data-ball>${g.its.every(i=>bd.sel.has(i.id))?'ยกเลิกทั้งหมด':'เลือกทั้งหมด'}</button><span class="cnt ml">เลือกแล้ว <b>${bd.sel.size}</b></span><button class="btn pri" data-badd ${bd.sel.size?'':'disabled'}>เอาไอเทม</button></div>`}
 function renderOrder(){
   const o=cur();renderChips();
   if(document.activeElement!==$('#oname'))$('#oname').value=o.name;
@@ -335,7 +353,7 @@ function renderResults(){
     P.innerHTML=`<p class="mode-note" style="padding:0 8px 6px">ผังนี้แสดงจำนวนเต็มก่อนหักของที่มีแล้ว · แตะหัวข้อเพื่อพับ/ขยาย</p>`+items.map(([id,q])=>node(id,q,0)).join('')
   }
 }
-const renderAll=()=>{renderOrder();renderResults();save()};
+const renderAll=()=>{renderOrder();renderResults();if(bd.open!=null)renderDrop();save()};
 
 /* ---------- sheets ---------- */
 const openSheet=el=>{el.classList.add('on');document.body.style.overflow='hidden'};
@@ -401,6 +419,11 @@ document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)r
   else if(t.id==='selAll'){const all=visible.length&&visible.every(i=>pk.sel.has(i.id));visible.forEach(i=>all?pk.sel.delete(i.id):pk.sel.add(i.id));renderGrid()}
   else if(t.id==='addSel'){let n=0;for(const id of pk.sel)if(!o.items.some(x=>x[0]===id)){o.items.push([id,1]);n++}const ov=[...pk.sel].filter(id=>overLv(M[id])).length;closeSheets();renderAll();toast((n?`เพิ่ม ${n} รายการแล้ว`:'อยู่ในออเดอร์แล้ว')+(ov?` · ⚠ ${ov} รายการเกินเลเวลฟาร์ม`:''))}
   else if('inc'in ds){o.items[ds.inc][1]++;renderAll()}
+  else if('bopen'in ds){const k=+ds.bopen;bd.open=bd.open===k?null:k;bd.sel.clear();renderStrip();renderDrop();if(bd.open!=null)$('#bdrop').scrollIntoView({block:'nearest',behavior:'smooth'})}
+  else if('bclose'in ds){bd.open=null;bd.sel.clear();renderStrip();renderDrop()}
+  else if('bpick'in ds){const id=ds.bpick;bd.sel.has(id)?bd.sel.delete(id):bd.sel.add(id);if(bd.sel.has(id)&&overLv(M[id]))toast(`⚠ ${M[id].th} ต้องใช้ Lv ${M[id].lv} แต่ฟาร์มของคุณ Lv ${st.lv} ยังซื้อหรือผลิตไม่ได้`);renderDrop()}
+  else if('ball'in ds){const its=BG[bd.open].its,all=its.every(i=>bd.sel.has(i.id));its.forEach(i=>all?bd.sel.delete(i.id):bd.sel.add(i.id));renderDrop()}
+  else if('badd'in ds){let n=0;const ov=[...bd.sel].filter(id=>overLv(M[id])).length;for(const id of bd.sel)if(!o.items.some(x=>x[0]===id)){o.items.push([id,1]);n++}bd.sel.clear();bd.open=null;renderStrip();renderDrop();renderAll();toast((n?`เอา ${n} ไอเทมแล้ว`:'มีในรายการแล้ว')+(ov?` · ⚠ ${ov} รายการเกินเลเวลฟาร์ม`:''))}
   else if('inc10'in ds){o.items[ds.inc10][1]+=10;renderAll()}
   else if('dec'in ds){const x=o.items[ds.dec];if(x[1]>1){x[1]--;renderAll()}}
   else if('del'in ds){o.items.splice(ds.del,1);renderAll()}
@@ -448,6 +471,7 @@ function copyList(){const items=scopeItems(),R=compute(items);
 
 fetch('data.json').then(r=>r.json()).then(j=>{D=j.items;COLS=j.cols;TILE=j.tile;BC=j.bcols;BT=j.btile;BL=j.bldg||{};D.forEach(i=>M[i.id]=i);
   for(const i of D)for(const[c,q]of i.ing)(USES[c]=USES[c]||[]).push([i.id,q]);
+  buildBG();renderStrip();
   for(const o of st.orders)o.items=o.items.filter(x=>M[x[0]]);
   if(st.lv)$('#myLv').value=st.lv;renderAll()})
  .catch(()=>{$('#pane').innerHTML='<p class="empty">โหลดข้อมูลไม่สำเร็จ ลองรีเฟรชหน้าอีกครั้ง</p>'});
