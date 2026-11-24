@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#d3e5f4" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#102233" media="(prefers-color-scheme: dark)">
 <title>เช็กวัตถุดิบเควส Hay Day</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -10,15 +11,15 @@
 /* VOICE: friendly farm helper, calm and tidy — a checklist you tick off before loading the truck.
    IDEA: the barn order board: pick goods, see exactly what to gather, tick rows green as they're ready.
    PICTURE: the item grid itself (real game icons) and the live "ready / missing" checklist.
-   COLOUR and TYPE: blush pink ground, mauve ink, raspberry accent, leaf green for "ready". Kanit throughout.
+   COLOUR and TYPE: Glacier Blue (iPhone 18 Pro) — icy blue ground, deep navy ink, glacier-blue accent, leaf green for "ready". Kanit throughout.
    LAYOUT: two columns from 900px (order list left, checklist right); stacked on phone; picker is a bottom sheet. */
 :root{color-scheme:light dark;
---bg:light-dark(#fbeef3,#1d1219);--card:light-dark(#fff,#2a1b24);--ink:light-dark(#5e3a4d,#f6e3ec);--soft:light-dark(#9a7b8b,#bfa2b1);
---line:light-dark(#f6d3e0,#4a3040);--tint:light-dark(#fdf3f7,#331f2b);--acc:light-dark(#e5487f,#ff7aa8);--acc2:light-dark(#fde2ec,#4b2738);
---ok:light-dark(#2f9e5b,#5fd08b);--okbg:light-dark(#e6f6ec,#173326);--warn:light-dark(#d2562f,#ff9a73)}
+--bg:light-dark(#e6f0f8,#0b141d);--bg2:light-dark(#d3e5f4,#102233);--card:light-dark(#fff,#132130);--ink:light-dark(#1b3550,#e4eef7);--soft:light-dark(#62809c,#91aac0);
+--line:light-dark(#cfe1f0,#223a52);--tint:light-dark(#f0f6fb,#182a3c);--acc:light-dark(#2f78b8,#8cc4ee);--on:light-dark(#fff,#0b1a29);--acc2:light-dark(#dcebf8,#1f3d58);
+--ok:light-dark(#22955a,#5fd08b);--okbg:light-dark(#e3f5ea,#13301f);--warn:light-dark(#cc4e2a,#ff9a73)}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}[hidden]{display:none!important}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Kanit,"Noto Sans Thai",system-ui,sans-serif;overflow-x:clip}
+body{margin:0;background:linear-gradient(180deg,var(--bg2),var(--bg) 420px) var(--bg);min-height:100vh;color:var(--ink);font:16px/1.5 Kanit,"Noto Sans Thai",system-ui,sans-serif;overflow-x:clip}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:3px solid var(--acc);outline-offset:2px}
@@ -30,12 +31,12 @@ h1{font-size:clamp(28px,5vw,40px);line-height:1.05;margin:0;font-weight:600;text
 .lvbox input{width:64px;height:40px;border:0;background:var(--tint);border-radius:10px;text-align:center;font-size:16px}
 .grid2{display:grid;gap:18px;grid-template-columns:minmax(0,1fr)}
 @media(min-width:900px){.grid2{grid-template-columns:minmax(0,5fr) minmax(0,7fr)}.sticky{position:sticky;top:14px;align-self:start}}
-.card{background:var(--card);border-radius:26px;border:1.5px solid var(--line);box-shadow:0 10px 30px -18px rgba(150,60,100,.35)}
+.card{background:var(--card);border-radius:26px;border:1.5px solid var(--line);box-shadow:0 12px 32px -18px rgba(30,90,150,.35)}
 .chd{display:flex;align-items:center;gap:10px;padding:18px 20px 12px;flex-wrap:wrap}
 h2{font-size:21px;margin:0;font-weight:500}
 .cnt{color:var(--soft);font-size:15px}
 .btn{min-height:44px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);padding:0 16px;font-weight:500}
-.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:var(--on)}
 .btn.pri:disabled{opacity:.45;cursor:default}
 .btn.ghost{border-color:transparent;background:transparent;color:var(--soft)}
 .ml{margin-left:auto}
@@ -64,7 +65,7 @@ h2{font-size:21px;margin:0;font-weight:500}
 .bar i{display:block;height:100%;background:var(--ok);border-radius:9px;transition:width .4s}
 .tabs,.seg{display:flex;gap:6px;padding:0 20px;overflow-x:auto}
 .tabs button,.seg button{flex:none;min-height:44px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);padding:0 16px}
-.tabs button[aria-selected=true]{background:var(--acc);border-color:var(--acc);color:#fff}
+.tabs button[aria-selected=true]{background:var(--acc);border-color:var(--acc);color:var(--on)}
 .seg{padding-top:10px}
 .seg button{min-height:38px;font-size:14px;border-radius:12px}
 .seg button[aria-pressed=true]{background:var(--acc2);border-color:var(--acc);color:var(--acc)}
@@ -80,7 +81,7 @@ h2{font-size:21px;margin:0;font-weight:500}
 .have label{font-size:11px;color:var(--soft)}
 .have input{width:58px;height:40px;border-radius:12px;border:1.5px solid var(--line);background:var(--tint);text-align:center;font-size:16px}
 .tag{flex:none;font-size:13px;font-weight:500;border-radius:999px;padding:3px 10px;white-space:nowrap}
-.tag.ok{background:var(--ok);color:#fff}.tag.no{background:var(--acc2);color:var(--warn)}
+.tag.ok{background:var(--ok);color:var(--on)}.tag.no{background:var(--acc2);color:var(--warn)}
 .bld{margin:8px 0 14px;border-radius:18px;background:var(--tint);padding:6px 10px 10px}
 .bld h3{font-size:16px;margin:6px 4px 4px;font-weight:500;display:flex;gap:8px;flex-wrap:wrap}
 .bld h3 span{color:var(--soft);font-weight:400;font-size:14px}
@@ -93,7 +94,7 @@ details.t>summary::-webkit-details-marker{display:none}
 .note{font-size:13px;color:var(--soft);margin:18px 4px 0}
 .note a{color:var(--acc)}
 /* picker sheet */
-.ov{position:fixed;inset:0;background:rgba(60,30,45,.45);backdrop-filter:blur(3px);display:none;z-index:20;align-items:flex-end;justify-content:center}
+.ov{position:fixed;inset:0;background:rgba(12,32,52,.45);backdrop-filter:blur(3px);display:none;z-index:20;align-items:flex-end;justify-content:center}
 .ov.on{display:flex}
 .sheet{background:var(--card);width:min(860px,100%);height:min(92vh,920px);border-radius:28px 28px 0 0;display:flex;flex-direction:column;overflow:hidden}
 @media(min-width:700px){.ov{align-items:center}.sheet{border-radius:28px}}
@@ -113,7 +114,7 @@ details.t>summary::-webkit-details-marker{display:none}
 .pc{position:relative;border:1.5px solid var(--line);border-radius:18px;background:var(--card);padding:26px 6px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px}
 .pc.sel{border-color:var(--acc);background:var(--acc2)}
 .pc .lv{position:absolute;left:8px;top:7px;font-size:12px;color:var(--soft);background:var(--tint);border-radius:8px;padding:0 6px}
-.pc .bx{position:absolute;right:8px;top:7px;width:22px;height:22px;border-radius:7px;border:1.5px solid var(--line);background:var(--card);display:grid;place-items:center;color:#fff;font-size:14px}
+.pc .bx{position:absolute;right:8px;top:7px;width:22px;height:22px;border-radius:7px;border:1.5px solid var(--line);background:var(--card);display:grid;place-items:center;color:var(--on);font-size:14px}
 .pc.sel .bx{background:var(--acc);border-color:var(--acc)}
 .pc .th{font-weight:500;font-size:15px;line-height:1.2;margin-top:4px}
 .pc .en{font-size:12px;color:var(--soft)}
@@ -133,7 +134,7 @@ details.t>summary::-webkit-details-marker{display:none}
 .ohead{display:flex;gap:8px;padding:2px 20px 8px;flex-wrap:wrap;align-items:center}
 .ohead input{flex:1 1 170px;height:46px;border-radius:14px;border:1.5px solid var(--line);background:var(--tint);padding:0 14px;font-size:17px;font-weight:500}
 .btn.sm{min-height:40px;padding:0 12px;font-size:14px}
-.btn.okb[aria-pressed=true]{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn.okb[aria-pressed=true]{background:var(--ok);border-color:var(--ok);color:var(--on)}
 .donebar{margin:0 20px 6px;padding:8px 12px;border-radius:12px;background:var(--okbg);color:var(--ok);font-size:14px}
 .val{margin:4px 20px 12px;border-radius:18px;background:var(--tint);padding:12px 14px}
 .val .vt{font-size:14px;font-weight:500;margin-bottom:6px}
