@@ -182,6 +182,21 @@ details.t>summary::-webkit-details-marker{display:none}
 .iqrow{display:flex;align-items:center;gap:10px;padding:6px 2px;border-top:1px solid var(--line)}
 .iqrow .nm small{display:block;font-size:12px;color:var(--soft)}.in2{display:block;font-size:12px;color:var(--acc);font-weight:500}
 .iqrow .addb{border-radius:999px}
+.fab{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:calc(18px + env(safe-area-inset-bottom));z-index:15;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.fabbtn{width:58px;height:58px;border-radius:999px;display:grid;place-items:center;color:#fff;border:1px solid light-dark(rgba(255,255,255,.6),rgba(255,255,255,.3));
+  background:linear-gradient(180deg,light-dark(#5aa6e6,#a9d6f6) 0,var(--acc) 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 12px 28px -8px light-dark(rgba(30,110,190,.65),rgba(0,0,0,.7))}
+:root[data-theme=dark] .fabbtn,.fabbtn{color:var(--on)}
+.fabbtn .i-close{display:none}.fabbtn[aria-expanded=true] .i-close{display:inline}.fabbtn[aria-expanded=true] .i-open{display:none}
+.fabmenu{min-width:220px;max-height:min(70vh,520px);overflow-y:auto;padding:8px;border-radius:24px;background:var(--glass-strong);-webkit-backdrop-filter:blur(30px) saturate(190%);backdrop-filter:blur(30px) saturate(190%);border:1px solid var(--edge);box-shadow:inset 0 1px 0 var(--edge),0 18px 44px -12px var(--shade)}
+.fabmenu button{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;border:0;background:none;border-radius:14px;padding:6px 12px;text-align:left;font-size:15px;color:var(--ink)}
+.fabmenu button:hover,.fabmenu button:focus-visible{background:var(--acc2)}
+.fabmenu .sub{padding-left:22px;font-size:14px;color:var(--soft);min-height:38px}
+.fabmenu small{margin-left:auto;color:var(--soft);font-size:12px;white-space:nowrap}
+.fabmenu .fi{width:24px;text-align:center;color:var(--acc);font-weight:600}
+.fabmenu hr{border:0;border-top:1px solid var(--line);margin:4px 8px}
+@media(prefers-reduced-motion:no-preference){.fabmenu:not([hidden]){animation:fabIn .18s ease-out}@keyframes fabIn{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}}
+.wrap{padding-bottom:110px}
+.card,.bsec{scroll-margin-top:14px}
 /* ===== Liquid Glass layer ===== */
 :root{
 --card:light-dark(rgba(255,255,255,.52),rgba(255,255,255,.07));
@@ -310,6 +325,7 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
     <div id="rvBody" class="rvlist"></div>
   </div>
 </div>
+<div class="fab" id="fab"><div class="fabmenu" id="fabMenu" hidden></div><button class="fabbtn" id="fabBtn" aria-expanded="false" aria-controls="fabMenu" aria-label="ไปที่หมวด"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path class="i-open" d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/><path class="i-close" d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg></button></div>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -570,6 +586,20 @@ function copyList(){const items=scopeItems(),R=compute(items);
   const txt=lines.join('\n');
   (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast('คัดลอกแล้ว'),()=>toast('คัดลอกไม่ได้ในหน้านี้'))}
 
+
+/* floating jump menu */
+const fabTargets=()=>{const n=cur().items.length,secs=[...document.querySelectorAll('.bsec')];
+  return [['top','↑','บนสุด (เลเวล / Tag Farm)',''],['items','▦','ไอเทม',''],...BGS.map((g,i)=>['g'+i,String(i+1),g.t,g.gs.length+' เครื่อง','sub']),['hr'],['summary','≡','รายการสรุป',n?n+' รายการ':'ว่าง'],['results','✓','ต้องเตรียมอะไรบ้าง','']]};
+function renderFab(){$('#fabMenu').innerHTML=fabTargets().map(t=>t[0]==='hr'?'<hr>':`<button data-jump="${t[0]}"${t[4]?` class="${t[4]}"`:''}><span class="fi">${esc(t[1])}</span>${esc(t[2])}${t[3]?`<small>${esc(t[3])}</small>`:''}</button>`).join('')}
+const setFab=open=>{const m=$('#fabMenu'),b=$('#fabBtn');if(open)renderFab();m.hidden=!open;b.setAttribute('aria-expanded',open);b.setAttribute('aria-label',open?'ปิดเมนู':'ไปที่หมวด')};
+function jump(k){const sm=matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth';
+  if(k==='top'){scrollTo({top:0,behavior:sm});return}
+  const el=k==='items'?$('#oh').closest('section'):k==='summary'?$('#sh').closest('section'):k==='results'?$('#rh').closest('section'):document.querySelectorAll('.bsec')[+k.slice(1)];
+  el?.scrollIntoView({behavior:sm,block:'start'})}
+$('#fabBtn').addEventListener('click',e=>{e.stopPropagation();setFab($('#fabMenu').hidden)});
+$('#fabMenu').addEventListener('click',e=>{const b=e.target.closest('[data-jump]');if(!b)return;e.stopPropagation();setFab(false);jump(b.dataset.jump)});
+document.addEventListener('click',e=>{if(!$('#fabMenu').hidden&&!e.target.closest('#fab'))setFab(false)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#fabMenu').hidden){setFab(false);$('#fabBtn').focus()}});
 fetch('data-v2.json',{cache:'no-cache'}).then(r=>r.json()).then(j=>{D=j.items;COLS=j.cols;TILE=j.tile;BC=j.bcols;BT=j.btile;BL=j.bldg||{};D.forEach(i=>M[i.id]=i);
   for(const i of D)for(const[c,q]of i.ing)(USES[c]=USES[c]||[]).push([i.id,q]);
   buildBG();renderStrip();
