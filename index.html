@@ -28,6 +28,7 @@ header{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 20px;margin-bot
 h1{font-size:clamp(28px,5vw,40px);line-height:1.05;margin:0;font-weight:600;text-wrap:balance}
 .sub{margin:6px 0 0;color:var(--soft);font-weight:300}
 .lvbox{display:flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:6px 8px 6px 14px}
+.lvbox{white-space:nowrap}.lvbox .tagin{width:150px;text-align:left;padding:0 10px}.lvbox .qin{width:80px}.qc{margin-right:-4px;font-variant-numeric:tabular-nums}.qc b{font-weight:600}#qBox.over .qc b{color:var(--warn)}#qBox.hit .qc b{color:var(--ok)}
 .lvbox input{width:64px;height:40px;border:0;background:var(--tint);border-radius:10px;text-align:center;font-size:16px}
 .grid2{display:grid;gap:18px;grid-template-columns:minmax(0,1fr)}
 @media(min-width:900px){.grid2{grid-template-columns:minmax(0,5fr) minmax(0,7fr)}.sticky{position:sticky;top:14px;align-self:start}}
@@ -152,17 +153,18 @@ details.t>summary::-webkit-details-marker{display:none}
 .addb{flex:none;width:44px;height:44px;border-radius:12px;border:1.5px solid var(--acc);background:var(--card);color:var(--acc);font-size:22px}
 .pc .cnt2{font-size:11px;color:var(--acc)}
 .sheet{position:relative}
-@media(max-width:600px){.hdr-r{margin-left:0}.rvlist .rrow .uses{margin-left:56px;text-align:left;max-width:none}.rvlist .rrow .addb{margin-left:auto}.val .vg b{font-size:18px}.orow{flex-wrap:wrap;row-gap:6px}.orow .nm{flex-basis:calc(100% - 106px)}.orow .step{margin-left:58px}.orow .x{margin-left:auto}.rrow{flex-wrap:wrap}.rrow .nm{flex-basis:calc(100% - 60px)}.rrow .need{margin-left:56px;text-align:left}.rrow .have{margin-left:auto;flex-direction:row;gap:6px}.sum{gap:6px}.stat{padding:10px}}
+@media(max-width:600px){.hdr-r{margin-left:0;width:100%}.hdr-r .lvbox{flex:1 1 auto}.lvbox .tagin{width:100%}.rvlist .rrow .uses{margin-left:56px;text-align:left;max-width:none}.rvlist .rrow .addb{margin-left:auto}.val .vg b{font-size:18px}.orow{flex-wrap:wrap;row-gap:6px}.orow .nm{flex-basis:calc(100% - 106px)}.orow .step{margin-left:58px}.orow .x{margin-left:auto}.rrow{flex-wrap:wrap}.rrow .nm{flex-basis:calc(100% - 60px)}.rrow .need{margin-left:56px;text-align:left}.rrow .have{margin-left:auto;flex-direction:row;gap:6px}.sum{gap:6px}.stat{padding:10px}}
 @media(prefers-reduced-motion:reduce){.bar i,.toast{transition:none}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-  <div><h1>เช็กวัตถุดิบเควส Hay Day</h1><p class="sub">เลือกของที่ต้องส่ง แล้วดูว่าต้องเตรียมวัตถุดิบอะไร เท่าไร</p></div>
+  <div><h1>Hay Day item list</h1></div>
   <div class="hdr-r">
-    <button class="btn" id="rvOpen">ใช้ทำอะไรได้บ้าง?</button>
     <label class="lvbox">เลเวลฟาร์ม <input id="myLv" type="number" min="1" max="200" inputmode="numeric" placeholder="—"></label>
+    <label class="lvbox">Tag Farm <input id="tagIn" class="tagin" type="text" autocomplete="off" spellcheck="false" maxlength="30" placeholder="#แท็กฟาร์ม"></label>
+    <label class="lvbox" id="qBox">จำนวนของที่ต้องการสั่ง <span class="qc"><b id="qCount">0</b>/</span><input id="qTarget" class="qin" type="number" min="1" inputmode="numeric" placeholder="—"></label>
   </div>
 </header>
 <div class="grid2">
@@ -266,6 +268,7 @@ function renderChips(){
 function renderOrder(){
   const o=cur();renderChips();
   if(document.activeElement!==$('#oname'))$('#oname').value=o.name;
+  renderHdr();
   $('#donebar').hidden=!o.done;
   const db=$('#ordDone');db.setAttribute('aria-pressed',o.done);db.textContent=o.done?'✓ ส่งแล้ว':'ทำเครื่องหมายว่าส่งแล้ว';
   const ol=$('#olist');
@@ -282,6 +285,13 @@ function renderOrder(){
     <div><span>XP รวม</span><b>${fmtC(v.xp)}</b>${v.time?` <small>· ผลิต ≈ ${fmtT(v.time)}</small>`:''}</div></div>
     <p>คิดจากราคาขายสูงสุดในแผงขายของ (Roadside Shop) ตามวิกิ ใช้เทียบความคุ้มคร่าวๆ — รางวัลจริงจากรถส่งของ/เรือจะไม่เท่ากับตัวเลขนี้ · ไม่หักของที่มีแล้ว · เวลาผลิตคือเวลาเครื่องรวม ไม่รวมเวลาปลูกและเลี้ยงสัตว์</p>`
 }
+
+const renderHdr=()=>{const o=cur(),n=o.items.reduce((s,i)=>s+i[1],0),t=o.target||0;
+  if(document.activeElement!==$('#tagIn'))$('#tagIn').value=o.tag||'';
+  if(document.activeElement!==$('#qTarget'))$('#qTarget').value=t||'';
+  $('#qCount').textContent=n.toLocaleString();
+  $('#qBox').classList.toggle('over',!!t&&n>t);$('#qBox').classList.toggle('hit',!!t&&n===t)};
+const fixTag=v=>{v=v.replace(/^[#\s]+/,'');return '#'+v};
 
 /* ---------- results ---------- */
 const nameBtn=it=>`<button class="linkb" data-rv="${esc(it.id)}"><b>${esc(it.th)}</b></button>`;
@@ -412,6 +422,11 @@ document.addEventListener('change',e=>{const t=e.target;
 });
 $('#q').addEventListener('input',e=>{pk.q=e.target.value;renderGrid()});
 $('#rvQ').addEventListener('input',e=>{rv.q=e.target.value;renderRv()});
+$('#tagIn').addEventListener('focus',e=>{if(!e.target.value)e.target.value='#'});
+$('#tagIn').addEventListener('input',e=>{const t=e.target,v=fixTag(t.value);if(t.value!==v){t.value=v;t.setSelectionRange(v.length,v.length)}cur().tag=v.length>1?v:'';save()});
+$('#tagIn').addEventListener('keydown',e=>{const t=e.target;if((e.key==='Backspace'&&t.selectionStart<=1&&t.selectionEnd<=1)||(e.key==='Delete'&&t.selectionStart===0&&t.selectionEnd===0))e.preventDefault()});
+$('#tagIn').addEventListener('blur',e=>{if(e.target.value==='#')e.target.value=''});
+$('#qTarget').addEventListener('input',e=>{cur().target=n0(e.target.value)||null;renderHdr();save()});
 $('#oname').addEventListener('input',e=>{cur().name=e.target.value.trim()||'ออเดอร์';renderChips();renderResults();save()});
 document.querySelectorAll('.ov').forEach(ov=>ov.addEventListener('click',e=>{if(e.target===ov)closeSheets()}));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheets()});
