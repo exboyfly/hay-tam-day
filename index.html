@@ -47,7 +47,7 @@ h2{font-size:21px;margin:0;font-weight:500}
 .olist{list-style:none;margin:0;padding:0 12px 12px}
 .ogrp{display:flex;align-items:center;gap:10px;margin:12px 4px 2px;padding:6px 12px 6px 8px;border-radius:12px;background:var(--acc2);color:var(--acc);font-weight:500;font-size:15px}.step .p10{width:auto;padding:0 10px;font-size:15px;font-weight:600;border-left:1.5px solid var(--line);border-radius:0 12px 12px 0}
 .ogrp small{margin-left:auto;color:var(--soft);font-weight:400;font-size:13px;white-space:nowrap}.ogrp+.orow{border-top:0}
-.orow{display:flex;align-items:center;gap:12px;padding:10px 8px;border-top:1px solid var(--line)}
+.orow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 8px;border-top:1px solid var(--line)}
 .orow:first-child{border-top:0}
 .nm{flex:1}.nm b{display:block;font-weight:500;line-height:1.25}.nm small{color:var(--soft);font-size:13px}
 .step{display:flex;align-items:center;background:var(--tint);border-radius:14px;border:1.5px solid var(--line)}
@@ -55,6 +55,10 @@ h2{font-size:21px;margin:0;font-weight:500}
 .step input{width:48px;height:44px;border:0;background:none;text-align:center;font-size:16px;font-weight:500;-moz-appearance:textfield}
 .step input::-webkit-inner-spin-button{display:none}
 .x{width:36px;height:44px;border:0;background:none;color:var(--soft);font-size:22px}
+.nmh{display:flex;align-items:center;gap:8px}.nmh b{flex:1}
+.orow .nm{flex:1 1 calc(100% - 70px)}.orow .step{margin-left:58px}
+.xdel{flex:none;width:32px;height:32px;border-radius:999px;border:1px solid light-dark(rgba(220,38,38,.35),rgba(255,107,107,.45));background:light-dark(rgba(254,226,226,.85),rgba(220,38,38,.18));color:light-dark(#dc2626,#ff6b6b);font-size:20px;font-weight:600;line-height:1;display:grid;place-items:center;padding:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.6)}
+.xdel:hover{background:light-dark(#dc2626,#ff6b6b);color:#fff}
 .empty{padding:26px 22px 30px;text-align:center;color:var(--soft)}
 .empty .btn{margin-top:14px}
 .ofoot{display:flex;gap:8px;padding:0 20px 18px;flex-wrap:wrap}
@@ -169,7 +173,7 @@ details.t>summary::-webkit-details-marker{display:none}
 .addb{flex:none;width:44px;height:44px;border-radius:12px;border:1.5px solid var(--acc);background:var(--card);color:var(--acc);font-size:22px}
 .pc .cnt2{font-size:11px;color:var(--acc)}
 .sheet{position:relative}
-@media(max-width:600px){.hdr-r{margin-left:0;width:100%}.isearch{max-width:none;order:3;flex-basis:100%}.step button{width:36px}.step input{width:42px}.step .p10{padding:0 8px;font-size:14px}.hdr-r .btn.clr{flex:1 1 100%}.hdr-r .lvbox{flex:1 1 auto}.lvbox .tagin{width:100%}.rvlist .rrow .uses{margin-left:56px;text-align:left;max-width:none}.rvlist .rrow .addb{margin-left:auto}.val .vg b{font-size:18px}.orow{flex-wrap:wrap;row-gap:6px}.orow .nm{flex-basis:calc(100% - 106px)}.orow .step{margin-left:58px}.orow .x{margin-left:auto}.rrow{flex-wrap:wrap}.rrow .nm{flex-basis:calc(100% - 60px)}.rrow .need{margin-left:56px;text-align:left}.rrow .have{margin-left:auto;flex-direction:row;gap:6px}.sum{gap:6px}.stat{padding:10px}}
+@media(max-width:600px){.hdr-r{margin-left:0;width:100%}.orow .step{margin-left:58px}.step .p10{padding:0 7px}.isearch{max-width:none;order:3;flex-basis:100%}.step button{width:36px}.step input{width:42px}.step .p10{padding:0 8px;font-size:14px}.hdr-r .btn.clr{flex:1 1 100%}.hdr-r .lvbox{flex:1 1 auto}.lvbox .tagin{width:100%}.rvlist .rrow .uses{margin-left:56px;text-align:left;max-width:none}.rvlist .rrow .addb{margin-left:auto}.val .vg b{font-size:18px}.orow{flex-wrap:wrap;row-gap:6px}.orow .nm{flex-basis:calc(100% - 106px)}.orow .step{margin-left:58px}.orow .x{margin-left:auto}.rrow{flex-wrap:wrap}.rrow .nm{flex-basis:calc(100% - 60px)}.rrow .need{margin-left:56px;text-align:left}.rrow .have{margin-left:auto;flex-direction:row;gap:6px}.sum{gap:6px}.stat{padding:10px}}
 @media(prefers-reduced-motion:reduce){.bar i,.toast{transition:none}}
 .lcol{display:flex;flex-direction:column;gap:18px;min-width:0}
 .isearch{flex:1 1 150px;max-width:260px}.isearch input{width:100%;height:42px;border-radius:999px;border:1px solid var(--line);background:var(--tint);padding:0 16px;font-size:16px;box-shadow:inset 0 1px 2px light-dark(rgba(30,80,140,.1),rgba(0,0,0,.3))}
@@ -358,7 +362,7 @@ const BLV={'Bakery':2,'Feed Mill':3,'Dairy':6,'Sugar Mill':7,'Popcorn Pot':8,'BB
 const BGRP=[['พืชไร่ & ต้นไม้',['Field','@fruit','Beehive tree','Squirrel House']],
   ['อาหารสัตว์ & คอกสัตว์',['Feed Mill','Chicken','Cow','Pig','Sheep','Lamb','Goat']],
   ['เหมือง & เตาหลอม',['Mine','Smelter']],
-  ['ตกปลา & ทะเลสาบ',['Lure Workbench','Fish','Net Maker','Lobster Pool','Duck Salon']],
+  ['ตกปลา & ทะเลสาบ',['Lure Workbench','Fish','Net Maker','Lobster Pool','Duck Salon','Mussel Bed']],
   ['เครื่องผลิตอื่นๆ',null]];
 const gkey=g=>g.cat==='fruit'?'@fruit':g.en;
 let BG=[],BGS=[];const bd={open:null,sel:new Set()};
@@ -367,13 +371,13 @@ function buildBG(){const m=new Map();for(const i of D){if(i.cat==='special')cont
   const used=new Set(),listed=new Set(BGRP.flatMap(x=>x[1]||[]));
   BGS=BGRP.map(([t,ord])=>{const gs=ord?BG.filter(g=>ord.includes(gkey(g))).sort((x,y)=>ord.indexOf(gkey(x))-ord.indexOf(gkey(y))):BG.filter(g=>!listed.has(gkey(g))).sort((x,y)=>x.lv-y.lv||x.b.localeCompare(y.b,'th'));return{t,gs}})}
 function dropHTML(g){const inOrd=new Set(cur().items.map(x=>x[0]));
-  return `<div class="bdrop" id="bdrop"><div class="bh">${bicon(g.b,44)}<div class="nm"><b>${esc(g.b)}</b><small>ผลิตได้ ${g.its.length} ไอเทม · แตะเพื่อเลือก</small></div><button class="x" data-bclose aria-label="ปิด">×</button></div>
-  <div class="bgrid">${g.its.map(i=>`<button class="pc${bd.sel.has(i.id)?' sel':''}${overLv(i)?' over':''}" data-bpick="${esc(i.id)}" aria-pressed="${bd.sel.has(i.id)}"><span class="lv">Lv ${esc(i.lv??'-')}</span><span class="bx">✓</span>${icon(i,48)}<span class="th">${esc(i.th)}</span><span class="en">${esc(i.en)}</span>${overLv(i)?'<span class="ovl">เกินเลเวลฟาร์ม</span>':''}${inOrd.has(i.id)?'<span class="in">มีในรายการ</span>':''}</button>`).join('')}</div>
+  return `<div class="bdrop" id="bdrop"><div class="bh">${bicon(g.b,44)||icon(g.its[0],44)}<div class="nm"><b>${esc(g.b)}</b><small>ผลิตได้ ${g.its.length} ไอเทม · แตะเพื่อเลือก</small></div><button class="x" data-bclose aria-label="ปิด">×</button></div>
+  <div class="bgrid">${g.its.map(i=>`<button class="pc${bd.sel.has(i.id)?' sel':''}${overLv(i)?' over':''}" data-bpick="${esc(i.id)}" aria-pressed="${bd.sel.has(i.id)}"><span class="lv">Lv ${esc(i.lv??'-')}</span><span class="bx">✓</span>${icon(i,48)}<span class="th">${esc(i.th)}</span><span class="en">${esc(i.en)}</span>${overLv(i)?'<span class="ovl">เกินเลเวลฟาร์ม</span>':''}${i.partial?'<span class="ovl">สูตรยังไม่ครบ</span>':''}${inOrd.has(i.id)?'<span class="in">มีในรายการ</span>':''}</button>`).join('')}</div>
   <div class="bfoot"><button class="btn sm" data-ball>${g.its.every(i=>bd.sel.has(i.id))?'ยกเลิกทั้งหมด':'เลือกทั้งหมด'}</button><span class="cnt ml">เลือกแล้ว <b>${bd.sel.size}</b></span><button class="btn pri" data-badd ${bd.sel.size?'':'disabled'}>เอาไอเทม</button></div></div>`}
 function renderStrip(){const og=bd.open==null?null:BG[bd.open];
   $('#bstrip').innerHTML=BGS.map((sec,si)=>{const n=sec.gs.length,oi=sec.gs.indexOf(og);
     return `<section class="bsec"><h3><span class="bn">${si+1}</span>${sec.t} <small>${n} เครื่อง</small></h3><div class="bgrid3">`+sec.gs.map((g,i)=>{const k=BG.indexOf(g),open=k===bd.open;
-      let h=`<button class="btile" data-bopen="${k}" aria-expanded="${open}" aria-label="${esc(g.b)} — ${g.its.length} ไอเทม">${BLV[g.en]?`<span class="blv${st.lv&&BLV[g.en]>st.lv?' over':''}">Lv ${BLV[g.en]}</span>`:''}${bicon(g.b,56)}<span class="t">${esc(g.b)}</span></button>`;
+      let h=`<button class="btile" data-bopen="${k}" aria-expanded="${open}" aria-label="${esc(g.b)} — ${g.its.length} ไอเทม">${BLV[g.en]?`<span class="blv${st.lv&&BLV[g.en]>st.lv?' over':''}">Lv ${BLV[g.en]}</span>`:''}${bicon(g.b,56)||icon(g.its[0],56)}<span class="t">${esc(g.b)}</span></button>`;
       if(oi>=0&&Math.floor(oi/3)===Math.floor(i/3)&&i===Math.min(Math.floor(i/3)*3+2,n-1))h+=dropHTML(og);return h}).join('')+`</div></section>`}).join('')}
 const renderDrop=renderStrip;
 function renderOrder(){
@@ -385,9 +389,8 @@ function renderOrder(){
   const ol=$('#olist');
   if(!o.items.length){ol.innerHTML=`<li class="empty">ยังไม่มีไอเทมที่เลือก<br>แตะเครื่องผลิตหรือค้นหาไอเทมด้านบน</li>`;$('#val').hidden=true;return}
   const grp=new Map();o.items.forEach(([id,q],i)=>{const b=M[id].bth;if(!grp.has(b))grp.set(b,[]);grp.get(b).push([id,q,i])});
-  ol.innerHTML=[...grp].sort((x,y)=>x[0].localeCompare(y[0],'th')).map(([b,rows])=>`<li class="ogrp">${bicon(b,40)}<span>${esc(b)}</span><small>${rows.length} รายการ · ${rows.reduce((s,r)=>s+r[1],0)} ชิ้น</small></li>`+rows.map(([id,q,i])=>{const it=M[id];return `<li class="orow">${icon(it,46)}<div class="nm"><b>${esc(it.th)}</b><small>${esc(it.en)} · Lv ${esc(it.lv??'-')}${it.p?` · ${fmtC(it.p)} เหรียญ`:''}</small>${overLv(it)?`<span class="lvwarn">⚠ เกินเลเวลฟาร์ม (ต้องใช้ Lv ${esc(it.lv)})</span>`:''}</div>
-  <div class="step"><button data-dec="${i}" aria-label="ลด">−</button><input data-q="${i}" type="number" min="1" inputmode="numeric" value="${q}" aria-label="จำนวน ${esc(it.th)}"><button data-inc="${i}" aria-label="เพิ่ม">+</button><button class="p10" data-inc10="${i}" aria-label="เพิ่ม 10 ชิ้น">+10</button><button class="p10" data-inc50="${i}" aria-label="เพิ่ม 50 ชิ้น">+50</button></div>
-  <button class="x" data-del="${i}" aria-label="ลบ ${esc(it.th)}">×</button></li>`}).join('')).join('');
+  ol.innerHTML=[...grp].sort((x,y)=>x[0].localeCompare(y[0],'th')).map(([b,rows])=>`<li class="ogrp">${bicon(b,40)}<span>${esc(b)}</span><small>${rows.length} รายการ · ${rows.reduce((s,r)=>s+r[1],0)} ชิ้น</small></li>`+rows.map(([id,q,i])=>{const it=M[id];return `<li class="orow">${icon(it,46)}<div class="nm"><div class="nmh"><b>${esc(it.th)}</b><button class="xdel" data-del="${i}" aria-label="ลบ ${esc(it.th)}">×</button></div><small>${esc(it.en)} · Lv ${esc(it.lv??'-')}${it.p?` · ${fmtC(it.p)} เหรียญ`:''}</small>${overLv(it)?`<span class="lvwarn">⚠ เกินเลเวลฟาร์ม (ต้องใช้ Lv ${esc(it.lv)})</span>`:''}${partialNote(it)}</div>
+  <div class="step"><button data-dec="${i}" aria-label="ลด">−</button><input data-q="${i}" type="number" min="1" inputmode="numeric" value="${q}" aria-label="จำนวน ${esc(it.th)}"><button data-inc="${i}" aria-label="เพิ่ม">+</button><button class="p10" data-inc10="${i}" aria-label="เพิ่ม 10 ชิ้น">+10</button><button class="p10" data-inc50="${i}" aria-label="เพิ่ม 50 ชิ้น">+50</button><button class="p10" data-inc100="${i}" aria-label="เพิ่ม 100 ชิ้น">+100</button></div></li>`}).join('')).join('');
   const v=valueOf(o.items),pct=v.raw?Math.round(v.diff/v.raw*100):null;
   $('#val').hidden=false;
   $('#val').innerHTML=`<div class="vt">ความคุ้มของออเดอร์นี้</div><div class="vg">
@@ -403,6 +406,7 @@ const renderHdr=()=>{const o=cur(),n=o.items.reduce((s,i)=>s+i[1],0),t=o.target|
   if(document.activeElement!==$('#qTarget'))$('#qTarget').value=t||'';
   $('#qCount').textContent=n.toLocaleString();
   $('#qBox').classList.toggle('over',!!t&&n>t);$('#qBox').classList.toggle('hit',!!t&&n===t)};
+const partialNote=it=>it.partial?'<span class="lvwarn">⚠ สูตรยังไม่ครบ (วิกิยังไม่ระบุส่วนผสมทั้งหมด)</span>':'';
 const overLv=it=>!!st.lv&&(it.lv||0)>st.lv;
 const fixTag=v=>{v=v.replace(/^[#\s]+/,'');return '#'+v};
 
@@ -421,7 +425,7 @@ function renderResults(){
   $('#barI').style.width=L.length?(ready/L.length*100)+'%':'0';
   document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===st.tab));
   document.querySelectorAll('#seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===st.mode));
-  $('#mnote').textContent=MODES[st.mode];
+  $('#mnote').textContent=MODES[st.mode]+([...R.make,...R.leaf].some(r=>M[r.id].partial)?' · ⚠ มีไอเทมที่สูตรยังไม่ครบ (หอยแมลงภู่นึ่ง / ลิงกวีนีหอยแมลงภู่) วัตถุดิบที่คำนวณอาจขาดไป':'');
   const P=$('#pane');
   if(!items.length){P.innerHTML=`<p class="empty">${st.scope==='all'?'ไม่มีออเดอร์ที่ยังไม่ส่ง หรือออเดอร์ยังว่างอยู่':'เพิ่มของที่ต้องส่งในออเดอร์นี้ แล้วรายการวัตถุดิบจะขึ้นที่นี่ทันที'}</p>`;return}
   if(st.tab==='raw'){
@@ -446,7 +450,7 @@ function renderSearch(){if(!D)return;const el=$('#iqRes'),q=($('#iq').value||'')
   const inOrd=new Set(cur().items.map(x=>x[0]));
   const res=D.filter(i=>i.cat!=='special'&&(i.th.includes(q)||i.en.toLowerCase().includes(q))).sort((a,b)=>{const sa=a.th.startsWith(q)||a.en.toLowerCase().startsWith(q),sb=b.th.startsWith(q)||b.en.toLowerCase().startsWith(q);return (sb-sa)||(a.lv||0)-(b.lv||0)});
   el.hidden=false;
-  el.innerHTML=res.length?`<div class="iqh">พบ ${res.length} ไอเทม · แตะ + เพื่อเพิ่ม</div>`+res.slice(0,30).map(i=>`<div class="iqrow">${icon(i,40)}<div class="nm"><b>${esc(i.th)}</b><small>${esc(i.en)} · Lv ${esc(i.lv??'-')} · ${esc(i.bth)}</small>${overLv(i)?'<span class="lvwarn">⚠ เกินเลเวลฟาร์ม</span>':''}${inOrd.has(i.id)?'<span class="in2">มีในรายการ</span>':''}</div><button class="addb" data-addone="${esc(i.id)}" aria-label="เพิ่ม ${esc(i.th)}">+</button></div>`).join('')+(res.length>30?`<div class="iqh">แสดง 30 รายการแรก พิมพ์เพิ่มเพื่อให้แคบลง</div>`:'')
+  el.innerHTML=res.length?`<div class="iqh">พบ ${res.length} ไอเทม · แตะ + เพื่อเพิ่ม</div>`+res.slice(0,30).map(i=>`<div class="iqrow">${icon(i,40)}<div class="nm"><b>${esc(i.th)}</b><small>${esc(i.en)} · Lv ${esc(i.lv??'-')} · ${esc(i.bth)}</small>${overLv(i)?'<span class="lvwarn">⚠ เกินเลเวลฟาร์ม</span>':''}${partialNote(i)}${inOrd.has(i.id)?'<span class="in2">มีในรายการ</span>':''}</div><button class="addb" data-addone="${esc(i.id)}" aria-label="เพิ่ม ${esc(i.th)}">+</button></div>`).join('')+(res.length>30?`<div class="iqh">แสดง 30 รายการแรก พิมพ์เพิ่มเพื่อให้แคบลง</div>`:'')
     :'<div class="iqh">ไม่พบไอเทมที่ตรงกับคำค้น</div>'}
 
 /* ---------- sheets ---------- */
@@ -520,6 +524,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)r
   else if('badd'in ds){let n=0;const ov=[...bd.sel].filter(id=>overLv(M[id])).length;for(const id of bd.sel)if(!o.items.some(x=>x[0]===id)){o.items.push([id,1]);n++}bd.sel.clear();bd.open=null;renderStrip();renderDrop();renderAll();toast((n?`เอา ${n} ไอเทมแล้ว`:'มีในรายการแล้ว')+(ov?` · ⚠ ${ov} รายการเกินเลเวลฟาร์ม`:''))}
   else if('inc10'in ds){o.items[ds.inc10][1]+=10;renderAll()}
   else if('inc50'in ds){o.items[ds.inc50][1]+=50;renderAll()}
+  else if('inc100'in ds){o.items[ds.inc100][1]+=100;renderAll()}
   else if(t.id==='clearTop')arm(t,'ล้างข้อมูล',()=>{st.lv=null;o.tag='';o.target=null;$('#myLv').value='';$('#tagIn').value='';$('#qTarget').value='';t.textContent='ล้างข้อมูล';renderAll();renderStrip();toast('ล้างเลเวลฟาร์ม Tag Farm และจำนวนที่ต้องการสั่งแล้ว')});
   else if(t.id==='clearItems')arm(t,'ล้างข้อมูล',()=>{o.items=[];bd.sel.clear();t.textContent='ล้างข้อมูล';renderAll();renderStrip();toast('ล้างไอเทมที่เลือกแล้ว')});
   else if('dec'in ds){const x=o.items[ds.dec];if(x[1]>1){x[1]--;renderAll()}}
