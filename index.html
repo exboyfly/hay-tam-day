@@ -223,6 +223,7 @@ details.t>summary::-webkit-details-marker{display:none}
 .rcsheet{background:light-dark(rgba(247,251,255,.95),rgba(13,23,37,.95))}
 @media(max-width:600px){.rchead b{font-size:17px}.rcgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(prefers-reduced-motion:reduce){.ogrp .ofold svg{transition:none}}
+.resfold>:not(.chd){display:none!important}#resFold svg{transition:transform .2s}.resfold #resFold svg{transform:rotate(-90deg)}
 /* ===== Liquid Glass layer ===== */
 :root{
 --card:light-dark(rgba(255,255,255,.52),rgba(255,255,255,.07));
@@ -314,8 +315,8 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
     <div class="val" id="val"></div>
   </section>
   </div>
-  <section class="card" aria-labelledby="rh">
-    <div class="chd"><h2 id="rh">ต้องเตรียมอะไรบ้าง</h2></div>
+  <section class="card resfold" id="resSec" aria-labelledby="rh">
+    <div class="chd"><h2 id="rh">ต้องเตรียมอะไรบ้าง</h2><button class="bfold ml" id="resFold" aria-expanded="false" aria-controls="resSec"><span>แสดง</span><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
     <div class="seg scope" id="scope" aria-label="ขอบเขตการคำนวณ"></div>
     <div class="sum" id="sum"></div>
     <div class="bar"><i id="barI" style="width:0"></i></div>
@@ -576,6 +577,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)r
   else if('bopen'in ds){const k=+ds.bopen;bd.open=bd.open===k?null:k;bd.sel.clear();renderStrip();renderDrop();if(bd.open!=null)$('#bdrop')?.scrollIntoView({block:'nearest',behavior:'smooth'})}
   else if('bfold'in ds){const k=+ds.bfold,f=new Set(st.fold||[]);if(f.has(k))f.delete(k);else{f.add(k);if(bd.open!=null&&BGS[k].gs.includes(BG[bd.open])){bd.open=null;bd.sel.clear()}}st.fold=[...f];save();renderStrip()}
   else if('ofold'in ds){const f=new Set(st.ofold||[]),k=ds.ofold;f.has(k)?f.delete(k):f.add(k);st.ofold=[...f];save();renderOrder()}
+  else if(t.id==='resFold'){const sec=$('#resSec'),f=sec.classList.toggle('resfold');t.setAttribute('aria-expanded',!f);t.querySelector('span').textContent=f?'แสดง':'ซ่อน'}
   else if(t.id==='confirmBtn'){renderReceipt();openSheet($('#rcov'));$('#rcov .rcbody').scrollTop=0}
   else if(t.id==='rcCopy')copyReceipt();
   else if('bclose'in ds){bd.open=null;bd.sel.clear();renderStrip();renderDrop()}
