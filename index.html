@@ -333,7 +333,6 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
     <div class="copy"><button class="btn" id="copyBtn">คัดลอกรายการ</button><span class="cnt">แตะชื่อวัตถุดิบเพื่อดูว่าใช้ทำอะไรได้อีก</span></div>
   </section>
 </div>
-<p class="note">ข้อมูลสูตร เลเวล ราคา และ XP จาก <a href="https://hayday.fandom.com/wiki/Goods_List">Hay Day Wiki (Fandom) — Goods List</a> ดึงเมื่อ 7 ก.ค. 2026 · ชื่อภาษาไทยแปลเอง ไม่ใช่ชื่อทางการในเกม · เวลาผลิตเป็นเวลาพื้นฐาน (ยังไม่ลดจากการ mastery) · พืชไร่ 1 แปลงเก็บเกี่ยวได้ 2 ชิ้น</p>
 </div>
 
 <div class="ov" id="ov" role="dialog" aria-modal="true" aria-labelledby="ph">
@@ -361,7 +360,7 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
   <div class="sheet rcsheet">
     <div class="shd"><h2 id="rct">สรุปรายการสั่งซื้อ</h2><button class="x ml" data-close aria-label="ปิด">×</button></div>
     <div class="rcbody" id="rcBody"></div>
-    <div class="sft"><span class="cnt">แคปหน้าจอนี้เพื่อส่งต่อได้</span><button class="btn ml" id="rcCopy">คัดลอกข้อความ</button><button class="btn pri" data-close>ปิด</button></div>
+    <div class="sft"><span class="cnt">แคปหน้าจอนี้เพื่อส่งต่อได้</span><button class="btn ml" id="rcCopy">คัดลอกข้อความ</button><button class="btn pri" id="rcDone">เสร็จสิ้น</button></div>
   </div>
 </div>
 <div class="toast" id="toast" role="status"></div>
@@ -376,8 +375,8 @@ const MODES={direct:'แสดงเฉพาะส่วนผสมที่�
 const MODEN={direct:'ส่วนผสมตรง',raw:'ถึงผลผลิตดิบ',farm:'ถึงพืชไร่'};
 let D,M={},USES={},COLS,TILE,BC,BT,BL={};
 const st={orders:[],cur:null,scope:'cur',stock:{},mode:'raw',tab:'raw',lv:null};
-try{Object.assign(st,JSON.parse(localStorage.getItem('hdq')||'{}'))}catch(e){}
-const save=()=>{try{localStorage.setItem('hdq',JSON.stringify(st))}catch(e){}};
+try{localStorage.removeItem('hdq')}catch(e){}
+const save=()=>{};
 const newOrder=()=>{const o={k:'o'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:'ออเดอร์ '+(st.orders.length+1),items:[],done:false};st.orders.push(o);st.cur=o.k;return o};
 if(Array.isArray(st.order)){if(!st.orders.length&&st.order.length)newOrder().items=st.order;delete st.order}
 if(!st.orders.length)newOrder();
@@ -413,11 +412,11 @@ const valueOf=items=>{const sale=items.reduce((s,[id,q])=>s+(M[id].p||0)*q,0),xp
 const renderChips=()=>{};
 /* building groups + dropdown */
 const BLV={'Bakery':2,'Feed Mill':3,'Dairy':6,'Sugar Mill':7,'Popcorn Pot':8,'BBQ Grill':9,'Pie Oven':14,'Loom':17,'Sewing Machine':19,'Cake Oven':21,'Mine':24,'Smelter':24,'Juice Press':26,'Lure Workbench':27,'Ice Cream Maker':29,'Net Maker':30,'Doner Kebab Stand':32,'Jam Maker':35,'Jeweler':38,'Honey Extractor':39,'Coffee Kiosk':42,'Lobster Pool':44,'Soup Kitchen':46,'Candle Maker':48,'Flower Shop':49,'Duck Salon':50,'Candy Machine':51,'Sauce Maker':54,'Sushi Bar':56,'Salad Bar':58,'Sandwich Bar':61,'Smoothie Mixer':64,'Pasta Maker':67,'Essential Oils Lab':68,'Wok Kitchen':69,'Hat Maker':70,'Pasta Kitchen':72,'Hot Dog Stand':75,'Donut Maker':76,'Taco Kitchen':77,'Omelet Station':77,'Tea Stand':80,'Fondue Pot':81,'Bath Kiosk':84,'Deep Fryer':87,'Preservation Station':91,'Pottery Studio':94,'Fudge Shop':99,'Yogurt Maker':103,'Stew Pot':106,'Cupcake Maker':109,'Perfumerie':110,'Waffle Maker':114,'Porridge Bar':119,'Milkshake Bar':124};
-const BGRP=[['พืชไร่ & ต้นไม้',['Field','@fruit','Beehive tree','Squirrel House']],
-  ['อาหารสัตว์ & คอกสัตว์',['Feed Mill','Chicken','Cow','Pig','Sheep','Lamb','Goat']],
-  ['เหมือง & เตาหลอม',['Mine','Smelter']],
-  ['ตกปลา & ทะเลสาบ',['Lure Workbench','Fish','Net Maker','Lobster Pool','Duck Salon','Mussel Bed']],
-  ['เครื่องผลิตอื่นๆ',null]];
+const BGRP=[['เครื่องผลิต',null],
+  ['ทะเลสาบ',['Lure Workbench','Fish','Net Maker','Lobster Pool','Duck Salon','Mussel Bed']],
+  ['เหมืองแร่',['Mine','Smelter']],
+  ['พืชไร่ & ต้นไม้',['Field','@fruit','Beehive tree','Squirrel House']],
+  ['สัตว์',['Feed Mill','Chicken','Cow','Pig','Sheep','Lamb','Goat']]];
 const gkey=g=>g.cat==='fruit'?'@fruit':g.en;
 let BG=[],BGS=[];const bd={open:null,sel:new Set()};
 function buildBG(){const m=new Map();for(const i of D){if(i.cat==='special')continue;if(!m.has(i.bth))m.set(i.bth,[]);m.get(i.bth).push(i)}
@@ -580,6 +579,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)r
   else if(t.id==='resFold'){const sec=$('#resSec'),f=sec.classList.toggle('resfold');t.setAttribute('aria-expanded',!f);t.querySelector('span').textContent=f?'แสดง':'ซ่อน'}
   else if(t.id==='confirmBtn'){renderReceipt();openSheet($('#rcov'));$('#rcov .rcbody').scrollTop=0}
   else if(t.id==='rcCopy')copyReceipt();
+  else if(t.id==='rcDone')resetAll();
   else if('bclose'in ds){bd.open=null;bd.sel.clear();renderStrip();renderDrop()}
   else if('bpick'in ds){const id=ds.bpick;bd.sel.has(id)?bd.sel.delete(id):bd.sel.add(id);if(bd.sel.has(id)&&overLv(M[id]))toast(`⚠ ${M[id].th} ต้องใช้ Lv ${M[id].lv} แต่ฟาร์มของคุณ Lv ${st.lv} ยังซื้อหรือผลิตไม่ได้`);renderDrop()}
   else if('ball'in ds){const its=BG[bd.open].its,all=its.every(i=>bd.sel.has(i.id));its.forEach(i=>all?bd.sel.delete(i.id):bd.sel.add(i.id));renderDrop()}
@@ -647,6 +647,10 @@ function copyReceipt(){const o=cur(),n=o.items.reduce((a,x)=>a+x[1],0),t=o.targe
   for(const[b,rows]of rcGroups(o))lines.push('',`【${b}】`,...rows.map(([id,q])=>`• ${M[id].th} × ${q}`));
   (navigator.clipboard?navigator.clipboard.writeText(lines.join('\n')):Promise.reject()).then(()=>toast('คัดลอกแล้ว'),()=>toast('คัดลอกไม่ได้ในหน้านี้'))}
 
+function resetAll(){st.orders=[];st.cur=null;newOrder();Object.assign(st,{stock:{},mode:'raw',tab:'raw',scope:'cur',lv:null,fold:[],ofold:[]});
+  bd.open=null;bd.sel.clear();for(const id of ['#myLv','#tagIn','#qTarget','#iq'])$(id).value='';
+  $('#resSec').classList.add('resfold');$('#resFold').setAttribute('aria-expanded','false');$('#resFold span').textContent='แสดง';
+  closeSheets();setFab(false);renderAll();renderStrip();scrollTo({top:0});toast('เสร็จสิ้น · ล้างข้อมูลแล้ว')}
 /* floating jump menu */
 const fabTargets=()=>{const n=cur().items.length,secs=[...document.querySelectorAll('.bsec')];
   return [['top','↑','บนสุด (เลเวล / Tag Farm)',''],['items','▦','ไอเทม',''],...BGS.map((g,i)=>['g'+i,String(i+1),g.t,g.gs.length+' เครื่อง','sub']),['hr'],['summary','≡','รายการสรุป',n?n+' รายการ':'ว่าง'],['results','✓','ต้องเตรียมอะไรบ้าง','']]};
