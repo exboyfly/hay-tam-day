@@ -293,6 +293,17 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
 @media(prefers-reduced-transparency:reduce){
   .card,.lvbox,.toast,.sheet{background:light-dark(#f4f9fe,#122030);-webkit-backdrop-filter:none;backdrop-filter:none}
   body::before{display:none}}
+/* floating buttons: liquid glass */
+.fabbtn,.cartbtn{position:relative;overflow:visible;isolation:isolate;
+  -webkit-backdrop-filter:blur(14px) saturate(190%) brightness(1.05);backdrop-filter:blur(14px) saturate(190%) brightness(1.05);
+  border:1px solid light-dark(rgba(255,255,255,.75),rgba(255,255,255,.28));
+  box-shadow:inset 0 1.5px 0 light-dark(rgba(255,255,255,.95),rgba(255,255,255,.35)),inset 0 -2px 6px light-dark(rgba(30,90,160,.18),rgba(0,0,0,.35)),inset 0 0 0 .5px rgba(255,255,255,.25),0 10px 26px -8px light-dark(rgba(30,90,160,.45),rgba(0,0,0,.65))}
+.fabbtn{background:linear-gradient(180deg,light-dark(rgba(110,180,240,.55),rgba(140,200,245,.45)) 0,light-dark(rgba(47,120,184,.6),rgba(70,140,210,.45)) 100%);color:#fff}
+.cartbtn{background:linear-gradient(180deg,light-dark(rgba(255,255,255,.55),rgba(255,255,255,.16)) 0,light-dark(rgba(255,255,255,.32),rgba(255,255,255,.08)) 100%);color:light-dark(#1f5f99,#bfe0ff)}
+.fabbtn::before,.cartbtn::before{content:"";position:absolute;inset:2px 6px auto;height:45%;border-radius:999px 999px 60% 60%;pointer-events:none;z-index:-1;
+  background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0))}
+.fabbtn svg,.cartbtn svg{filter:drop-shadow(0 1px 1.5px light-dark(rgba(0,40,90,.35),rgba(0,0,0,.6)))}
+@media(prefers-reduced-transparency:reduce){.fabbtn{background:var(--acc);color:var(--on)}.cartbtn{background:light-dark(#fff,#16243a)}}
 </style>
 </head>
 <body>
