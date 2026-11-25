@@ -687,14 +687,15 @@ async function makePdf(btn){const o=cur();if(!o.items.length)return;
     /* items: one stream of blocks flowed into 3 balanced columns, then scaled to fit one page */
     const HH=46,IH=56,blocks=[];
     for(const[b,rows]of rcGroups(o)){blocks.push({k:'h',b,pcs:rows.reduce((a,r)=>a+r[1],0)});for(const[id,q]of rows)blocks.push({k:'i',id,q,b})}
-    const total=blocks.reduce((a,bl)=>a+(bl.k==='h'?HH:IH),0),target=Math.max(total/3,HH+IH);
-    const cols=[[],[],[]];let ci=0,ch=0,curB=null;
-    for(const bl of blocks){const h=bl.k==='h'?HH:IH;
-      const needH=bl.k==='h'?HH+IH:h;
-      if(ch>0&&ch+needH>target+IH*0.5&&ci<2){ci++;ch=0;if(bl.k==='i'){cols[ci].push({k:'h',b:bl.b,cont:true});ch+=HH}}
-      cols[ci].push(bl);ch+=h;if(bl.k==='h')curB=bl.b}
-    const colH=cols.map(cl=>cl.reduce((a,bl)=>a+(bl.k==='h'?HH:IH),0)),maxH=Math.max(...colH);
-    const avail=H-y-MG-30,sc=Math.min(1,avail/maxH);
+    /* fill each column top to bottom before starting the next; shrink only if 3 full columns are not enough */
+    const flow=cap=>{const cols=[[]];let ch=0;
+      for(const bl of blocks){const h=bl.k==='h'?HH:IH,needH=bl.k==='h'?HH+IH:h;
+        if(ch>0&&ch+needH>cap){cols.push([]);ch=0;if(bl.k==='i'){cols[cols.length-1].push({k:'h',b:bl.b,cont:true});ch+=HH}}
+        cols[cols.length-1].push(bl);ch+=h}
+      return cols};
+    const avail=H-y-MG-30;let sc=1,cols=flow(avail);
+    while(cols.length>3&&sc>0.05){sc*=0.97;cols=flow(avail/sc)}
+    while(cols.length<3)cols.push([]);
     const colW=(W-2*MG-2*GAP)/3/sc,gap=GAP/sc;
     x.save();x.translate(MG,y);x.scale(sc,sc);
     cols.forEach((cl,k)=>{let yy=0;const X=k*(colW+gap);
