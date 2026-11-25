@@ -313,6 +313,8 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
 .dlgf{display:flex;gap:10px;margin-top:16px}.dlgf .btn{flex:1;min-height:48px}
 .lvbox.needfix{animation:needfix 2s ease-out}@keyframes needfix{0%,60%{box-shadow:0 0 0 3px light-dark(#dc2626,#ff6b6b),0 0 0 8px light-dark(rgba(220,38,38,.2),rgba(255,107,107,.25))}100%{box-shadow:none}}
 @media(prefers-reduced-motion:reduce){.lvbox.needfix{animation:none;outline:3px solid var(--warn)}}
+.dwarn{margin:10px 0 0!important;padding:9px 12px;border-radius:12px;background:light-dark(rgba(254,226,226,.9),rgba(220,38,38,.2));color:light-dark(#b91c1c,#ff8a8a)!important;font-weight:500}
+.dlgf .btn:disabled{opacity:.45;cursor:not-allowed}
 </style>
 </head>
 <body>
@@ -749,8 +751,8 @@ async function makePdf(btn){const o=cur();if(!o.items.length)return;
 /* dialogs + required-field checks */
 let dlgBtns=[];
 function showDlg(title,html,btns){$('#dlgT').textContent=title;$('#dlgB').innerHTML=html;dlgBtns=btns;
-  $('#dlgF').innerHTML=btns.map((b,i)=>`<button class="btn${b.pri?' pri':''}" data-dlg="${i}">${esc(b.label)}</button>`).join('');
-  $('#dlgov').classList.add('on');setTimeout(()=>$('#dlgF .btn.pri')?.focus(),30)}
+  $('#dlgF').innerHTML=btns.map((b,i)=>`<button class="btn${b.pri?' pri':''}" data-dlg="${i}"${b.off?' disabled':''}>${esc(b.label)}</button>`).join('');
+  $('#dlgov').classList.add('on');setTimeout(()=>($('#dlgF .btn.pri:not(:disabled)')||$('#dlgF .btn'))?.focus(),30)}
 const closeDlg=()=>$('#dlgov').classList.remove('on');
 function dlgAct(i){const b=dlgBtns[i];closeDlg();b&&b.fn&&b.fn()}
 const FIELDS={lv:['#myLv','เลเวลฟาร์ม'],tag:['#tagIn','Tag Farm'],target:['#qTarget','จำนวนของที่ต้องการสั่ง']};
@@ -763,13 +765,13 @@ function needLv(){if(st.lv)return false;
   showDlg('กรอกเลเวลฟาร์มก่อน','<p>ต้องกรอก <b>เลเวลฟาร์ม</b> ด้านบนก่อน จึงจะเลือกไอเทมได้</p>',[{label:'ตกลง',pri:1,fn:()=>goField('lv')}]);return true}
 function needAll(){const m=missing();if(!m.length)return false;
   showDlg('ข้อมูลยังไม่ครบ',`<p>กรุณากรอกข้อมูลต่อไปนี้ก่อนคัดลอกหรือสร้าง PDF</p><ul>${m.map(k=>`<li>${FIELDS[k][1]}</li>`).join('')}</ul>`,[{label:'ตกลง',pri:1,fn:()=>goField(m[0])}]);return true}
-function recheck(){const o=cur(),n=o.items.reduce((a,x)=>a+x[1],0),t=o.target||0,miss='<span class="dmiss">ยังไม่ได้กรอก</span>';
-  showDlg('รีเช็คข้อมูลก่อนยืนยัน',`<p>กรุณาตรวจสอบความถูกต้องของข้อมูลต่อไปนี้</p><dl class="dchk">
+function recheck(){const o=cur(),n=o.items.reduce((a,x)=>a+x[1],0),t=o.target||0,miss='<span class="dmiss">ยังไม่ได้กรอก</span>',m=missing();
+  showDlg('ตรวจสอบข้อมูลก่อนยืนยัน',`<p>กรุณาตรวจสอบความถูกต้องของข้อมูลต่อไปนี้</p><dl class="dchk">
     <dt>เลเวลฟาร์ม</dt><dd>${st.lv?esc(st.lv):miss}</dd>
     <dt>Tag Farm</dt><dd>${o.tag&&o.tag.length>1?esc(o.tag):miss}</dd>
     <dt>จำนวนของที่ต้องการสั่ง</dt><dd>${t?t.toLocaleString()+' ชิ้น':miss}</dd>
-    <dt>จำนวนที่เลือกไว้</dt><dd>${o.items.length} รายการ · ${n.toLocaleString()} ชิ้น</dd></dl>`,
-    [{label:'กลับไปแก้ไข'},{label:'ถัดไป',pri:1,fn:()=>{renderReceipt();openSheet($('#rcov'));$('#rcov .rcbody').scrollTop=0}}])}
+    <dt>จำนวนที่เลือกไว้</dt><dd>${o.items.length} รายการ · ${n.toLocaleString()} ชิ้น</dd></dl>${m.length?'<p class="dwarn">⚠ โปรดกรอกข้อมูลให้ครบ</p>':''}`,
+    [{label:'กลับไปแก้ไข',fn:()=>{if(m.length)goField(m[0])}},{label:'ถัดไป',pri:1,off:m.length>0,fn:()=>{renderReceipt();openSheet($('#rcov'));$('#rcov .rcbody').scrollTop=0}}])}
 $('#dlgov').addEventListener('click',e=>{if(e.target.id==='dlgov')closeDlg()});
 
 /* floating jump menu */
