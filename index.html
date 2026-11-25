@@ -304,6 +304,15 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
   background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0))}
 .fabbtn svg,.cartbtn svg{filter:drop-shadow(0 1px 1.5px light-dark(rgba(0,40,90,.35),rgba(0,0,0,.6)))}
 @media(prefers-reduced-transparency:reduce){.fabbtn{background:var(--acc);color:var(--on)}.cartbtn{background:light-dark(#fff,#16243a)}}
+.dlgov{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;padding:20px;background:light-dark(rgba(15,40,70,.28),rgba(0,0,0,.5));-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.dlgov.on{display:flex}
+.dlg{width:min(420px,100%);padding:22px 22px 18px;border-radius:28px;background:light-dark(rgba(248,251,255,.9),rgba(18,30,46,.9));-webkit-backdrop-filter:blur(30px) saturate(190%);backdrop-filter:blur(30px) saturate(190%);border:1px solid var(--edge);box-shadow:inset 0 1px 0 var(--edge),0 24px 60px -16px var(--shade)}
+.dlg h2{font-size:21px;font-weight:600;margin:0 0 6px}.dlgb p{margin:0 0 8px;color:var(--soft);font-size:15px}.dlgb ul{margin:4px 0 0;padding-left:22px;font-weight:500}
+.dchk{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 14px;margin:10px 0 0;padding:12px 14px;border-radius:16px;background:var(--tint);border:1px solid var(--line)}
+.dchk dt{color:var(--soft);font-size:14px}.dchk dd{margin:0;font-weight:600;text-align:right;overflow-wrap:anywhere}.dmiss{color:var(--warn);font-weight:500}
+.dlgf{display:flex;gap:10px;margin-top:16px}.dlgf .btn{flex:1;min-height:48px}
+.lvbox.needfix{animation:needfix 2s ease-out}@keyframes needfix{0%,60%{box-shadow:0 0 0 3px light-dark(#dc2626,#ff6b6b),0 0 0 8px light-dark(rgba(220,38,38,.2),rgba(255,107,107,.25))}100%{box-shadow:none}}
+@media(prefers-reduced-motion:reduce){.lvbox.needfix{animation:none;outline:3px solid var(--warn)}}
 </style>
 </head>
 <body>
@@ -384,6 +393,7 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
     <div class="sft rcf"><button class="btn" id="rcCopy">คัดลอกข้อความ</button><button class="btn" id="rcPdf">PDF</button><button class="btn pri" id="rcDone">เสร็จสิ้น</button></div>
   </div>
 </div>
+<div class="dlgov" id="dlgov" role="alertdialog" aria-modal="true" aria-labelledby="dlgT" aria-describedby="dlgB"><div class="dlg"><h2 id="dlgT"></h2><div id="dlgB" class="dlgb"></div><div class="dlgf" id="dlgF"></div></div></div>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -596,13 +606,16 @@ document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)r
   else if(t.id==='selAll'){const all=visible.length&&visible.every(i=>pk.sel.has(i.id));visible.forEach(i=>all?pk.sel.delete(i.id):pk.sel.add(i.id));renderGrid()}
   else if(t.id==='addSel'){let n=0;for(const id of pk.sel)if(!o.items.some(x=>x[0]===id)){o.items.push([id,1]);n++}const ov=[...pk.sel].filter(id=>overLv(M[id])).length;closeSheets();renderAll();toast((n?`เพิ่ม ${n} รายการแล้ว`:'อยู่ในออเดอร์แล้ว')+(ov?` · ⚠ ${ov} รายการเกินเลเวลฟาร์ม`:''))}
   else if('inc'in ds){o.items[ds.inc][1]++;renderAll()}
+  else if('bopen'in ds&&needLv()){}
+  else if('addone'in ds&&needLv()){}
   else if('bopen'in ds){const k=+ds.bopen;bd.open=bd.open===k?null:k;bd.sel.clear();renderStrip();renderDrop();if(bd.open!=null)$('#bdrop')?.scrollIntoView({block:'nearest',behavior:'smooth'})}
   else if('bfold'in ds){const k=+ds.bfold,f=new Set(st.fold||[]);if(f.has(k))f.delete(k);else{f.add(k);if(bd.open!=null&&BGS[k].gs.includes(BG[bd.open])){bd.open=null;bd.sel.clear()}}st.fold=[...f];save();renderStrip()}
   else if('ofold'in ds){const f=new Set(st.ofold||[]),k=ds.ofold;f.has(k)?f.delete(k):f.add(k);st.ofold=[...f];save();renderOrder()}
   else if(t.id==='resFold'){const sec=$('#resSec'),f=sec.classList.toggle('resfold');t.setAttribute('aria-expanded',!f);t.querySelector('span').textContent=f?'แสดง':'ซ่อน'}
-  else if(t.id==='confirmBtn'){renderReceipt();openSheet($('#rcov'));$('#rcov .rcbody').scrollTop=0}
-  else if(t.id==='rcCopy')copyReceipt();
-  else if(t.id==='rcPdf')makePdf(t);
+  else if(t.id==='confirmBtn')recheck();
+  else if(t.id==='rcCopy'){if(!needAll())copyReceipt()}
+  else if(t.id==='rcPdf'){if(!needAll())makePdf(t)}
+  else if('dlg'in ds)dlgAct(+ds.dlg);
   else if(t.id==='rcDone')resetAll();
   else if('bclose'in ds){bd.open=null;bd.sel.clear();renderStrip();renderDrop()}
   else if('bpick'in ds){const id=ds.bpick;bd.sel.has(id)?bd.sel.delete(id):bd.sel.add(id);if(bd.sel.has(id)&&overLv(M[id]))toast(`⚠ ${M[id].th} ต้องใช้ Lv ${M[id].lv} แต่ฟาร์มของคุณ Lv ${st.lv} ยังซื้อหรือผลิตไม่ได้`);renderDrop()}
@@ -647,7 +660,7 @@ $('#tagIn').addEventListener('blur',e=>{if(e.target.value==='#')e.target.value='
 $('#qTarget').addEventListener('input',e=>{cur().target=n0(e.target.value)||null;renderHdr();save()});
 $('#iq').addEventListener('input',renderSearch);
 document.querySelectorAll('.ov').forEach(ov=>ov.addEventListener('click',e=>{if(e.target===ov)closeSheets()}));
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheets()});
+document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if($('#dlgov').classList.contains('on'))closeDlg();else closeSheets()});
 function copyList(){const items=scopeItems(),R=compute(items);
   const head=st.scope==='all'?pending().filter(o=>o.items.length).flatMap(o=>[`【${o.name}】`,...o.items.map(([id,q])=>`• ${M[id].th} × ${q}`)]):[`【${cur().name}】`,...items.map(([id,q])=>`• ${M[id].th} × ${q}`)];
   const lines=['เควส Hay Day — ของที่ต้องส่ง',...head,'','วัตถุดิบที่ต้องเตรียม ('+MODEN[st.mode]+')',
@@ -732,6 +745,32 @@ async function makePdf(btn){const o=cur();if(!o.items.length)return;
     else{const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);toast('สร้าง PDF แล้ว')}
   }catch(e){toast('สร้าง PDF ไม่สำเร็จ ลองใหม่อีกครั้ง')}
   finally{btn.disabled=false;btn.textContent=old}}
+
+/* dialogs + required-field checks */
+let dlgBtns=[];
+function showDlg(title,html,btns){$('#dlgT').textContent=title;$('#dlgB').innerHTML=html;dlgBtns=btns;
+  $('#dlgF').innerHTML=btns.map((b,i)=>`<button class="btn${b.pri?' pri':''}" data-dlg="${i}">${esc(b.label)}</button>`).join('');
+  $('#dlgov').classList.add('on');setTimeout(()=>$('#dlgF .btn.pri')?.focus(),30)}
+const closeDlg=()=>$('#dlgov').classList.remove('on');
+function dlgAct(i){const b=dlgBtns[i];closeDlg();b&&b.fn&&b.fn()}
+const FIELDS={lv:['#myLv','เลเวลฟาร์ม'],tag:['#tagIn','Tag Farm'],target:['#qTarget','จำนวนของที่ต้องการสั่ง']};
+const missing=()=>{const o=cur(),m=[];if(!st.lv)m.push('lv');if(!(o.tag&&o.tag.length>1))m.push('tag');if(!o.target)m.push('target');return m};
+function goField(k){closeSheets();setFab(false);const [sel]=FIELDS[k],inp=$(sel),box=inp.closest('.lvbox')||inp;
+  box.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});
+  inp.focus({preventScroll:true});if(k==='tag'&&!inp.value)inp.value='#';
+  box.classList.remove('needfix');void box.offsetWidth;box.classList.add('needfix');setTimeout(()=>box.classList.remove('needfix'),2200)}
+function needLv(){if(st.lv)return false;
+  showDlg('กรอกเลเวลฟาร์มก่อน','<p>ต้องกรอก <b>เลเวลฟาร์ม</b> ด้านบนก่อน จึงจะเลือกไอเทมได้</p>',[{label:'ตกลง',pri:1,fn:()=>goField('lv')}]);return true}
+function needAll(){const m=missing();if(!m.length)return false;
+  showDlg('ข้อมูลยังไม่ครบ',`<p>กรุณากรอกข้อมูลต่อไปนี้ก่อนคัดลอกหรือสร้าง PDF</p><ul>${m.map(k=>`<li>${FIELDS[k][1]}</li>`).join('')}</ul>`,[{label:'ตกลง',pri:1,fn:()=>goField(m[0])}]);return true}
+function recheck(){const o=cur(),n=o.items.reduce((a,x)=>a+x[1],0),t=o.target||0,miss='<span class="dmiss">ยังไม่ได้กรอก</span>';
+  showDlg('รีเช็คข้อมูลก่อนยืนยัน',`<p>กรุณาตรวจสอบความถูกต้องของข้อมูลต่อไปนี้</p><dl class="dchk">
+    <dt>เลเวลฟาร์ม</dt><dd>${st.lv?esc(st.lv):miss}</dd>
+    <dt>Tag Farm</dt><dd>${o.tag&&o.tag.length>1?esc(o.tag):miss}</dd>
+    <dt>จำนวนของที่ต้องการสั่ง</dt><dd>${t?t.toLocaleString()+' ชิ้น':miss}</dd>
+    <dt>จำนวนที่เลือกไว้</dt><dd>${o.items.length} รายการ · ${n.toLocaleString()} ชิ้น</dd></dl>`,
+    [{label:'กลับไปแก้ไข'},{label:'ถัดไป',pri:1,fn:()=>{renderReceipt();openSheet($('#rcov'));$('#rcov .rcbody').scrollTop=0}}])}
+$('#dlgov').addEventListener('click',e=>{if(e.target.id==='dlgov')closeDlg()});
 
 /* floating jump menu */
 const fabTargets=()=>{const n=cur().items.length,secs=[...document.querySelectorAll('.bsec')];
