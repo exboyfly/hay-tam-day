@@ -197,6 +197,32 @@ details.t>summary::-webkit-details-marker{display:none}
 @media(prefers-reduced-motion:no-preference){.fabmenu:not([hidden]){animation:fabIn .18s ease-out}@keyframes fabIn{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}}
 .wrap{padding-bottom:110px}
 .card,.bsec{scroll-margin-top:14px}
+.bsec h3 small{margin-left:auto}.bfold{display:inline-flex;align-items:center;gap:4px;min-height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--acc);font-size:13px;font-weight:500;box-shadow:inset 0 1px 0 var(--edge)}
+.bfold svg{transition:transform .2s}.bsec.fold .bfold svg{transform:rotate(-90deg)}.bsec.fold h3{opacity:.85}
+.qpill{display:inline-flex;align-items:baseline;gap:1px;padding:4px 12px;border-radius:999px;background:var(--acc2);border:1px solid var(--line);font-size:15px;color:var(--soft);white-space:nowrap;font-variant-numeric:tabular-nums}
+.qpill b{color:var(--ink);font-size:17px;font-weight:600}.qpill.hit{background:var(--okbg)}.qpill.hit b{color:var(--ok)}.qpill.over b{color:var(--warn)}
+#scnt{order:3;flex-basis:100%;margin-top:-6px}.bsec h3 small{white-space:nowrap}
+.qfoot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 20px 18px;padding:10px 14px;border-radius:18px;background:var(--tint);border:1px solid var(--line);font-weight:500}
+@media(prefers-reduced-motion:reduce){.bfold svg{transition:none}}
+.ogrp .ofold{flex:none;width:34px;height:34px;margin-left:4px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--acc);display:grid;place-items:center;padding:0;box-shadow:inset 0 1px 0 var(--edge)}
+.ogrp .ofold svg{transition:transform .2s}.ogrp.fold .ofold svg{transform:rotate(-90deg)}
+.cfm{padding:0 20px 20px}.cfm .btn{width:100%;min-height:54px;font-size:18px}
+.rcsheet{height:auto;max-height:min(94vh,980px)}
+.rcbody{flex:1;overflow-y:auto;padding:14px 16px 18px}
+.rchead{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.rchead div{background:var(--tint);border:1px solid var(--line);border-radius:16px;padding:10px 12px;box-shadow:inset 0 1px 0 var(--edge)}
+.rchead span{display:block;font-size:12px;color:var(--soft);line-height:1.25}
+.rchead b{display:block;font-size:20px;font-weight:600;line-height:1.2;overflow-wrap:anywhere}.rchead b small{font-size:14px;color:var(--soft);font-weight:400}
+.rchead .rcq.hit b{color:var(--ok)}.rchead .rcq.over b{color:var(--warn)}
+.rcgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;align-items:start}
+.rcg{border:1px solid var(--line);border-radius:16px;background:light-dark(rgba(255,255,255,.55),rgba(255,255,255,.05));padding:6px 8px 8px}
+.rcgh{display:flex;align-items:center;gap:6px;padding:0 0 4px;color:var(--acc);font-size:13px;line-height:1.2}.rcgh b{font-weight:500;flex:1}.rcgh small{color:var(--soft);font-size:11px;white-space:nowrap}
+.rcitems{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:4px}
+.rci{display:flex;flex-direction:column;align-items:center;text-align:center;gap:0;padding:4px 2px;border-radius:12px;background:var(--card);border:1px solid var(--line)}
+.rci b{font-size:14px;font-weight:600;line-height:1.2}.rci span{font-size:11px;line-height:1.15;color:var(--soft);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.rcsheet{background:light-dark(rgba(247,251,255,.95),rgba(13,23,37,.95))}
+@media(max-width:600px){.rchead b{font-size:17px}.rcgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){.ogrp .ofold svg{transition:none}}
 /* ===== Liquid Glass layer ===== */
 :root{
 --card:light-dark(rgba(255,255,255,.52),rgba(255,255,255,.07));
@@ -277,11 +303,15 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
     <div class="bstrip" id="bstrip" aria-label="เครื่องผลิต"></div>
   </section>
   <section class="card" aria-labelledby="sh">
-    <div class="chd"><h2 id="sh">รายการสรุป</h2><span class="cnt" id="scnt"></span></div>
+    <div class="chd"><h2 id="sh">รายการสรุป</h2><span class="cnt" id="scnt"></span><span class="qpill ml" id="sq1" title="จำนวนของที่สั่ง"></span></div>
     <div class="donebar" id="donebar" hidden>ออเดอร์นี้ส่งแล้ว ไม่นับรวมในยอด “รวมที่ยังไม่ส่ง”</div>
     <ul class="olist" id="olist"></ul>
-    <div class="val" id="val" hidden></div>
-    <div class="ofoot"><button class="btn sm okb" id="ordDone" aria-pressed="false">ส่งแล้ว</button><button class="btn sm ghost" id="ordDel">ลบออเดอร์</button><button class="btn sm ghost ml" id="clearStock">ล้างจำนวนที่มี</button></div>
+    <div class="qfoot"><span>จำนวนของที่สั่ง</span><span class="qpill" id="sq2"></span></div>
+    <div class="cfm"><button class="btn pri" id="confirmBtn" disabled>ยืนยันการสั่ง</button></div>
+  </section>
+  <section class="card" id="valSec" aria-labelledby="vh" hidden>
+    <div class="chd"><h2 id="vh">ความคุ้มของออเดอร์นี้</h2></div>
+    <div class="val" id="val"></div>
   </section>
   </div>
   <section class="card" aria-labelledby="rh">
@@ -326,6 +356,13 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
   </div>
 </div>
 <div class="fab" id="fab"><div class="fabmenu" id="fabMenu" hidden></div><button class="fabbtn" id="fabBtn" aria-expanded="false" aria-controls="fabMenu" aria-label="ไปที่หมวด"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path class="i-open" d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/><path class="i-close" d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg></button></div>
+<div class="ov" id="rcov" role="dialog" aria-modal="true" aria-labelledby="rct">
+  <div class="sheet rcsheet">
+    <div class="shd"><h2 id="rct">สรุปรายการสั่งซื้อ</h2><button class="x ml" data-close aria-label="ปิด">×</button></div>
+    <div class="rcbody" id="rcBody"></div>
+    <div class="sft"><span class="cnt">แคปหน้าจอนี้เพื่อส่งต่อได้</span><button class="btn ml" id="rcCopy">คัดลอกข้อความ</button><button class="btn pri" data-close>ปิด</button></div>
+  </div>
+</div>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -392,24 +429,26 @@ function dropHTML(g){const inOrd=new Set(cur().items.map(x=>x[0]));
   <div class="bfoot"><button class="btn sm" data-ball>${g.its.every(i=>bd.sel.has(i.id))?'ยกเลิกทั้งหมด':'เลือกทั้งหมด'}</button><span class="cnt ml">เลือกแล้ว <b>${bd.sel.size}</b></span><button class="btn pri" data-badd ${bd.sel.size?'':'disabled'}>เอาไอเทม</button></div></div>`}
 function renderStrip(){const og=bd.open==null?null:BG[bd.open];
   $('#bstrip').innerHTML=BGS.map((sec,si)=>{const n=sec.gs.length,oi=sec.gs.indexOf(og);
-    return `<section class="bsec"><h3><span class="bn">${si+1}</span>${sec.t} <small>${n} เครื่อง</small></h3><div class="bgrid3">`+sec.gs.map((g,i)=>{const k=BG.indexOf(g),open=k===bd.open;
+    const fold=(st.fold||[]).includes(si);
+    return `<section class="bsec${fold?' fold':''}"><h3><span class="bn">${si+1}</span>${sec.t} <small>${n} เครื่อง</small><button class="bfold" data-bfold="${si}" aria-expanded="${!fold}" aria-label="${fold?'แสดง':'ซ่อน'} ${esc(sec.t)}"><span>${fold?'แสดง':'ซ่อน'}</span><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></h3>`+(fold?'':`<div class="bgrid3">`+sec.gs.map((g,i)=>{const k=BG.indexOf(g),open=k===bd.open;
       let h=`<button class="btile" data-bopen="${k}" aria-expanded="${open}" aria-label="${esc(g.b)} — ${g.its.length} ไอเทม">${BLV[g.en]?`<span class="blv${st.lv&&BLV[g.en]>st.lv?' over':''}">Lv ${BLV[g.en]}</span>`:''}${bicon(g.b,56)||icon(g.its[0],56)}<span class="t">${esc(g.b)}</span></button>`;
-      if(oi>=0&&Math.floor(oi/3)===Math.floor(i/3)&&i===Math.min(Math.floor(i/3)*3+2,n-1))h+=dropHTML(og);return h}).join('')+`</div></section>`}).join('')}
+      if(oi>=0&&Math.floor(oi/3)===Math.floor(i/3)&&i===Math.min(Math.floor(i/3)*3+2,n-1))h+=dropHTML(og);return h}).join('')+`</div>`)+`</section>`}).join('')}
 const renderDrop=renderStrip;
 function renderOrder(){
   const o=cur();renderChips();
   {const n=o.items.reduce((a,x)=>a+x[1],0);$('#scnt').textContent=o.items.length?`${o.items.length} รายการ · ${n.toLocaleString()} ชิ้น`:''}
   renderHdr();
   $('#donebar').hidden=!o.done;
-  const db=$('#ordDone');db.setAttribute('aria-pressed',o.done);db.textContent=o.done?'✓ ส่งแล้ว':'ทำเครื่องหมายว่าส่งแล้ว';
+  $('#confirmBtn').disabled=!o.items.length;
   const ol=$('#olist');
-  if(!o.items.length){ol.innerHTML=`<li class="empty">ยังไม่มีไอเทมที่เลือก<br>แตะเครื่องผลิตหรือค้นหาไอเทมด้านบน</li>`;$('#val').hidden=true;return}
+  if(!o.items.length){ol.innerHTML=`<li class="empty">ยังไม่มีไอเทมที่เลือก<br>แตะเครื่องผลิตหรือค้นหาไอเทมด้านบน</li>`;$('#valSec').hidden=true;return}
   const grp=new Map();o.items.forEach(([id,q],i)=>{const b=M[id].bth;if(!grp.has(b))grp.set(b,[]);grp.get(b).push([id,q,i])});
-  ol.innerHTML=[...grp].sort((x,y)=>x[0].localeCompare(y[0],'th')).map(([b,rows])=>`<li class="ogrp">${bicon(b,40)}<span>${esc(b)}</span><small>${rows.length} รายการ · ${rows.reduce((s,r)=>s+r[1],0)} ชิ้น</small></li>`+rows.map(([id,q,i])=>{const it=M[id];return `<li class="orow">${icon(it,46)}<div class="nm"><div class="nmh"><b>${esc(it.th)}</b><button class="xdel" data-del="${i}" aria-label="ลบ ${esc(it.th)}">×</button></div><small>${esc(it.en)} · Lv ${esc(it.lv??'-')}${it.p?` · ${fmtC(it.p)} เหรียญ`:''}</small>${overLv(it)?`<span class="lvwarn">⚠ เกินเลเวลฟาร์ม (ต้องใช้ Lv ${esc(it.lv)})</span>`:''}${partialNote(it)}</div>
-  <div class="step"><button data-dec="${i}" aria-label="ลด">−</button><input data-q="${i}" type="number" min="1" inputmode="numeric" value="${q}" aria-label="จำนวน ${esc(it.th)}"><button data-inc="${i}" aria-label="เพิ่ม">+</button><button class="p10" data-inc10="${i}" aria-label="เพิ่ม 10 ชิ้น">+10</button><button class="p10" data-inc50="${i}" aria-label="เพิ่ม 50 ชิ้น">+50</button><button class="p10" data-inc100="${i}" aria-label="เพิ่ม 100 ชิ้น">+100</button></div></li>`}).join('')).join('');
+  const of=new Set(st.ofold||[]);
+  ol.innerHTML=[...grp].sort((x,y)=>x[0].localeCompare(y[0],'th')).map(([b,rows])=>`<li class="ogrp${of.has(b)?' fold':''}">${bicon(b,40)}<span>${esc(b)}</span><small>${rows.length} รายการ · ${rows.reduce((s,r)=>s+r[1],0)} ชิ้น</small><button class="ofold" data-ofold="${esc(b)}" aria-expanded="${!of.has(b)}" aria-label="${of.has(b)?'แสดง':'ซ่อน'} ${esc(b)}"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></li>`+(of.has(b)?'':rows.map(([id,q,i])=>{const it=M[id];return `<li class="orow">${icon(it,46)}<div class="nm"><div class="nmh"><b>${esc(it.th)}</b><button class="xdel" data-del="${i}" aria-label="ลบ ${esc(it.th)}">×</button></div><small>${esc(it.en)} · Lv ${esc(it.lv??'-')}${it.p?` · ${fmtC(it.p)} เหรียญ`:''}</small>${overLv(it)?`<span class="lvwarn">⚠ เกินเลเวลฟาร์ม (ต้องใช้ Lv ${esc(it.lv)})</span>`:''}${partialNote(it)}</div>
+  <div class="step"><button data-dec="${i}" aria-label="ลด">−</button><input data-q="${i}" type="number" min="1" inputmode="numeric" value="${q}" aria-label="จำนวน ${esc(it.th)}"><button data-inc="${i}" aria-label="เพิ่ม">+</button><button class="p10" data-inc10="${i}" aria-label="เพิ่ม 10 ชิ้น">+10</button><button class="p10" data-inc50="${i}" aria-label="เพิ่ม 50 ชิ้น">+50</button><button class="p10" data-inc100="${i}" aria-label="เพิ่ม 100 ชิ้น">+100</button></div></li>`}).join(''))).join('');
   const v=valueOf(o.items),pct=v.raw?Math.round(v.diff/v.raw*100):null;
-  $('#val').hidden=false;
-  $('#val').innerHTML=`<div class="vt">ความคุ้มของออเดอร์นี้</div><div class="vg">
+  $('#valSec').hidden=false;
+  $('#val').innerHTML=`<div class="vg">
     <div><span>ราคาขายสูงสุดรวม</span><b>${fmtC(v.sale)}</b> <small>เหรียญ</small></div>
     <div><span>มูลค่าวัตถุดิบ (${MODEN[st.mode]})</span><b>${fmtC(v.raw)}</b> <small>เหรียญ</small></div>
     <div class="diff${v.diff<0?' neg':''}"><span>ส่วนต่างจากการแปรรูป</span><b>${v.diff>=0?'+':''}${fmtC(v.diff)}</b>${pct!==null?` <small>(${pct>=0?'+':''}${pct}%)</small>`:''}</div>
@@ -421,7 +460,8 @@ const renderHdr=()=>{const o=cur(),n=o.items.reduce((s,i)=>s+i[1],0),t=o.target|
   if(document.activeElement!==$('#tagIn'))$('#tagIn').value=o.tag||'';
   if(document.activeElement!==$('#qTarget'))$('#qTarget').value=t||'';
   $('#qCount').textContent=n.toLocaleString();
-  $('#qBox').classList.toggle('over',!!t&&n>t);$('#qBox').classList.toggle('hit',!!t&&n===t)};
+  $('#qBox').classList.toggle('over',!!t&&n>t);$('#qBox').classList.toggle('hit',!!t&&n===t);
+  for(const id of ['#sq1','#sq2']){const e=$(id);e.innerHTML=`<b>${n.toLocaleString()}</b>/${t?t.toLocaleString():'—'}`;e.classList.toggle('over',!!t&&n>t);e.classList.toggle('hit',!!t&&n===t)}};
 const partialNote=it=>it.partial?'<span class="lvwarn">⚠ สูตรยังไม่ครบ (วิกิยังไม่ระบุส่วนผสมทั้งหมด)</span>':'';
 const overLv=it=>!!st.lv&&(it.lv||0)>st.lv;
 const fixTag=v=>{v=v.replace(/^[#\s]+/,'');return '#'+v};
@@ -534,6 +574,10 @@ document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)r
   else if(t.id==='addSel'){let n=0;for(const id of pk.sel)if(!o.items.some(x=>x[0]===id)){o.items.push([id,1]);n++}const ov=[...pk.sel].filter(id=>overLv(M[id])).length;closeSheets();renderAll();toast((n?`เพิ่ม ${n} รายการแล้ว`:'อยู่ในออเดอร์แล้ว')+(ov?` · ⚠ ${ov} รายการเกินเลเวลฟาร์ม`:''))}
   else if('inc'in ds){o.items[ds.inc][1]++;renderAll()}
   else if('bopen'in ds){const k=+ds.bopen;bd.open=bd.open===k?null:k;bd.sel.clear();renderStrip();renderDrop();if(bd.open!=null)$('#bdrop')?.scrollIntoView({block:'nearest',behavior:'smooth'})}
+  else if('bfold'in ds){const k=+ds.bfold,f=new Set(st.fold||[]);if(f.has(k))f.delete(k);else{f.add(k);if(bd.open!=null&&BGS[k].gs.includes(BG[bd.open])){bd.open=null;bd.sel.clear()}}st.fold=[...f];save();renderStrip()}
+  else if('ofold'in ds){const f=new Set(st.ofold||[]),k=ds.ofold;f.has(k)?f.delete(k):f.add(k);st.ofold=[...f];save();renderOrder()}
+  else if(t.id==='confirmBtn'){renderReceipt();openSheet($('#rcov'));$('#rcov .rcbody').scrollTop=0}
+  else if(t.id==='rcCopy')copyReceipt();
   else if('bclose'in ds){bd.open=null;bd.sel.clear();renderStrip();renderDrop()}
   else if('bpick'in ds){const id=ds.bpick;bd.sel.has(id)?bd.sel.delete(id):bd.sel.add(id);if(bd.sel.has(id)&&overLv(M[id]))toast(`⚠ ${M[id].th} ต้องใช้ Lv ${M[id].lv} แต่ฟาร์มของคุณ Lv ${st.lv} ยังซื้อหรือผลิตไม่ได้`);renderDrop()}
   else if('ball'in ds){const its=BG[bd.open].its,all=its.every(i=>bd.sel.has(i.id));its.forEach(i=>all?bd.sel.delete(i.id):bd.sel.add(i.id));renderDrop()}
@@ -586,6 +630,20 @@ function copyList(){const items=scopeItems(),R=compute(items);
   const txt=lines.join('\n');
   (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast('คัดลอกแล้ว'),()=>toast('คัดลอกไม่ได้ในหน้านี้'))}
 
+
+/* order confirmation sheet */
+const rcGroups=o=>{const g=new Map();for(const[id,q]of o.items){const b=M[id].bth;if(!g.has(b))g.set(b,[]);g.get(b).push([id,q])}return[...g].sort((x,y)=>x[0].localeCompare(y[0],'th'))};
+function renderReceipt(){const o=cur(),n=o.items.reduce((a,x)=>a+x[1],0),t=o.target||0;
+  $('#rcBody').innerHTML=`<div class="rchead">
+    <div><span>เลเวลฟาร์ม</span><b>${st.lv?esc(st.lv):'—'}</b></div>
+    <div><span>Tag Farm</span><b>${esc(o.tag||'—')}</b></div>
+    <div class="rcq${t&&n>t?' over':t&&n===t?' hit':''}"><span>จำนวนของที่ต้องการสั่ง</span><b>${n.toLocaleString()}<small>/${t?t.toLocaleString():'—'}</small></b></div></div>`+
+  '<div class="rcgrid">'+rcGroups(o).map(([b,rows])=>`<div class="rcg"${rows.length>2?' style="grid-column:1/-1"':''}><div class="rcgh">${bicon(b,24)}<b>${esc(b)}</b><small>${rows.reduce((a,r)=>a+r[1],0).toLocaleString()} ชิ้น</small></div>
+    <div class="rcitems">${rows.map(([id,q])=>`<div class="rci">${icon(M[id],36)}<b>× ${q.toLocaleString()}</b><span>${esc(M[id].th)}</span></div>`).join('')}</div></div>`).join('')+'</div>'}
+function copyReceipt(){const o=cur(),n=o.items.reduce((a,x)=>a+x[1],0),t=o.target||0;
+  const lines=['สรุปรายการสั่งซื้อ Hay Day',`เลเวลฟาร์ม: ${st.lv||'—'}`,`Tag Farm: ${o.tag||'—'}`,`จำนวนของที่ต้องการสั่ง: ${n}/${t||'—'}`];
+  for(const[b,rows]of rcGroups(o))lines.push('',`【${b}】`,...rows.map(([id,q])=>`• ${M[id].th} × ${q}`));
+  (navigator.clipboard?navigator.clipboard.writeText(lines.join('\n')):Promise.reject()).then(()=>toast('คัดลอกแล้ว'),()=>toast('คัดลอกไม่ได้ในหน้านี้'))}
 
 /* floating jump menu */
 const fabTargets=()=>{const n=cur().items.length,secs=[...document.querySelectorAll('.bsec')];
