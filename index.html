@@ -228,6 +228,12 @@ details.t>summary::-webkit-details-marker{display:none}
 .rchint{margin:12px 0 0;text-align:center;font-size:12px;color:var(--soft)}
 .cfwarn{margin:0 0 10px;padding:10px 14px;border-radius:14px;background:light-dark(rgba(254,226,226,.85),rgba(220,38,38,.18));color:light-dark(#b91c1c,#ff8a8a);font-size:14px;font-weight:500;line-height:1.4}
 #confirmBtn:disabled{opacity:.5;cursor:not-allowed}
+.fabrow{display:flex;align-items:center;gap:12px}
+.cartbtn{position:relative;width:58px;height:58px;border-radius:999px;display:grid;place-items:center;color:var(--acc);
+  background:light-dark(rgba(255,255,255,.94),rgba(22,36,56,.94));-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);
+  border:1px solid light-dark(rgba(47,120,184,.35),rgba(140,196,238,.35));box-shadow:inset 0 1px 0 var(--edge),0 12px 28px -10px var(--shade)}
+.cbadge{position:absolute;top:-4px;right:-4px;min-width:24px;height:24px;padding:0 6px;border-radius:999px;background:light-dark(#dc2626,#ff6b6b);color:#fff;font-size:13px;font-weight:600;display:grid;place-items:center;line-height:1;border:2px solid light-dark(#fff,#0b141d)}
+@media(prefers-reduced-motion:no-preference){.cbadge.bump{animation:cbump .35s ease-out}@keyframes cbump{0%{transform:scale(1)}40%{transform:scale(1.3)}100%{transform:scale(1)}}}
 /* ===== Liquid Glass layer ===== */
 :root{
 --card:light-dark(rgba(255,255,255,.52),rgba(255,255,255,.07));
@@ -359,7 +365,7 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
     <div id="rvBody" class="rvlist"></div>
   </div>
 </div>
-<div class="fab" id="fab"><div class="fabmenu" id="fabMenu" hidden></div><button class="fabbtn" id="fabBtn" aria-expanded="false" aria-controls="fabMenu" aria-label="ไปที่หมวด"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path class="i-open" d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/><path class="i-close" d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg></button></div>
+<div class="fab" id="fab"><div class="fabmenu" id="fabMenu" hidden></div><div class="fabrow"><button class="cartbtn" id="cartBtn" aria-label="ไปที่รายการสรุป"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M3 4h2.2l2.1 10.2a1.6 1.6 0 0 0 1.6 1.3h8.3a1.6 1.6 0 0 0 1.6-1.2L20.5 8H6.4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="19.5" r="1.6" fill="currentColor"/><circle cx="17" cy="19.5" r="1.6" fill="currentColor"/></svg><span class="cbadge" id="cartN" hidden>0</span></button><button class="fabbtn" id="fabBtn" aria-expanded="false" aria-controls="fabMenu" aria-label="ไปที่หมวด"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path class="i-open" d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/><path class="i-close" d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg></button></div></div>
 <div class="ov" id="rcov" role="dialog" aria-modal="true" aria-labelledby="rct">
   <div class="sheet rcsheet">
     <div class="shd"><h2 id="rct">สรุปรายการสั่งซื้อ</h2><button class="x ml" data-close aria-label="ปิด">×</button></div>
@@ -466,6 +472,7 @@ const renderHdr=()=>{const o=cur(),n=o.items.reduce((s,i)=>s+i[1],0),t=o.target|
   $('#qBox').classList.toggle('over',!!t&&n>t);$('#qBox').classList.toggle('hit',!!t&&n===t);
   {const over=!!t&&n>t,w=$('#cfWarn');$('#confirmBtn').disabled=!o.items.length||over;w.hidden=!over;
    if(over)w.textContent=`⚠ จำนวนของเกินที่ต้องการสั่ง (${n.toLocaleString()}/${t.toLocaleString()}) ลดลงอีก ${(n-t).toLocaleString()} ชิ้นก่อนยืนยันการสั่ง`}
+  {const c=o.items.length,e=$('#cartN');if(e.textContent!==String(c)){e.textContent=c>99?'99+':c;e.hidden=!c;e.classList.remove('bump');void e.offsetWidth;e.classList.add('bump')}$('#cartBtn').setAttribute('aria-label',`ไปที่รายการสรุป (${c} รายการ)`)}
   for(const id of ['#sq1','#sq2']){const e=$(id);e.innerHTML=`<b>${n.toLocaleString()}</b>/${t?t.toLocaleString():'—'}`;e.classList.toggle('over',!!t&&n>t);e.classList.toggle('hit',!!t&&n===t)}};
 const partialNote=it=>it.partial?'<span class="lvwarn">⚠ สูตรยังไม่ครบ (วิกิยังไม่ระบุส่วนผสมทั้งหมด)</span>':'';
 const overLv=it=>!!st.lv&&(it.lv||0)>st.lv;
@@ -723,6 +730,7 @@ function jump(k){const sm=matchMedia('(prefers-reduced-motion: reduce)').matches
   if(k==='top'){scrollTo({top:0,behavior:sm});return}
   const el=k==='items'?$('#oh').closest('section'):k==='summary'?$('#sh').closest('section'):k==='results'?$('#rh').closest('section'):document.querySelectorAll('.bsec')[+k.slice(1)];
   el?.scrollIntoView({behavior:sm,block:'start'})}
+$('#cartBtn').addEventListener('click',e=>{e.stopPropagation();setFab(false);jump('summary')});
 $('#fabBtn').addEventListener('click',e=>{e.stopPropagation();setFab($('#fabMenu').hidden)});
 $('#fabMenu').addEventListener('click',e=>{const b=e.target.closest('[data-jump]');if(!b)return;e.stopPropagation();setFab(false);jump(b.dataset.jump)});
 document.addEventListener('click',e=>{if(!$('#fabMenu').hidden&&!e.target.closest('#fab'))setFab(false)});
