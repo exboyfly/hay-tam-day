@@ -644,7 +644,7 @@ function renderReceipt(){const o=cur(),n=o.items.reduce((a,x)=>a+x[1],0),t=o.tar
     <div class="rcitems">${rows.map(([id,q])=>`<div class="rci">${icon(M[id],36)}<b>× ${q.toLocaleString()}</b><span>${esc(M[id].th)}</span></div>`).join('')}</div></div>`).join('')+'</div>'}
 function copyReceipt(){const o=cur(),n=o.items.reduce((a,x)=>a+x[1],0),t=o.target||0;
   const lines=['สรุปรายการสั่งซื้อ Hay Day',`เลเวลฟาร์ม: ${st.lv||'—'}`,`Tag Farm: ${o.tag||'—'}`,`จำนวนของที่ต้องการสั่ง: ${n}/${t||'—'}`];
-  for(const[b,rows]of rcGroups(o))lines.push('',`【${b}】`,...rows.map(([id,q])=>`• ${M[id].th} × ${q}`));
+  for(const[b,rows]of rcGroups(o))lines.push('',`【${b}】`,...rows.map(([id,q])=>`• ${M[id].en} (${M[id].th}) × ${q}`));
   (navigator.clipboard?navigator.clipboard.writeText(lines.join('\n')):Promise.reject()).then(()=>toast('คัดลอกแล้ว'),()=>toast('คัดลอกไม่ได้ในหน้านี้'))}
 
 function resetAll(){st.orders=[];st.cur=null;newOrder();Object.assign(st,{stock:{},mode:'raw',tab:'raw',scope:'cur',lv:null,fold:[],ofold:[]});
