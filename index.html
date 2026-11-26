@@ -342,6 +342,21 @@ header .hdr-r{margin-left:0;width:100%}
 .pft{display:flex;flex-direction:column;min-width:0;line-height:1.25}.pft b{font-weight:500}.pft small{font-size:12px;color:var(--soft);margin:0}
 .pfok{margin-left:auto;color:var(--ok);font-weight:700}.pfph{padding:6px 12px 4px;font-size:12px;color:var(--soft)}.pfnone{margin:4px 12px 8px;font-size:14px;color:var(--soft)}
 @media(max-width:600px){.htop h1{font-size:26px}.pfbtn{min-height:40px;padding:0 12px;font-size:14px}}
+.pfsort{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:4px}.pfsort span{font-size:13px;color:var(--soft);margin-right:2px}
+.pfhint{margin:2px 2px 10px;font-size:12px;color:var(--soft)}
+.pfno{flex:none;width:22px;text-align:center;font-weight:600;color:var(--acc);font-size:14px}
+.pfrow .nm{flex:1;min-width:0}
+.pfact{flex:none;display:flex;align-items:center;gap:2px;margin-left:auto}
+.pfgrip{flex:none;width:44px;height:44px;padding:0;border:0;border-radius:14px;background:transparent;color:var(--soft);display:grid;place-items:center;touch-action:none;cursor:grab;-webkit-user-select:none;user-select:none}
+.pfgrip:active{cursor:grabbing}.pfgrip:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.pfList-drag .pfrow{transition:transform .22s cubic-bezier(.2,.8,.2,1)}
+.pfrow.drag{position:relative;z-index:5;transition:box-shadow .2s,scale .2s!important;scale:1.03;box-shadow:inset 0 1px 0 var(--edge),0 16px 34px -10px var(--shade);background:var(--glass-strong,var(--card))}
+.pfrow.drag .pfgrip{color:var(--acc)}
+.pfrow.drop{transition:transform .2s ease-out,scale .2s,box-shadow .2s!important}
+body.pfdragging{-webkit-user-select:none;user-select:none}
+.pfrow.moved{animation:pfmoved .5s ease-out}@keyframes pfmoved{from{background:var(--acc2)}to{background:var(--card)}}
+@media(prefers-reduced-motion:reduce){.pfrow.moved{animation:none}.pfList-drag .pfrow,.pfrow.drag,.pfrow.drop{transition:none!important}}
+@media(max-width:600px){.pfrow{gap:8px;padding:8px 10px}.pfrow .pfav{display:none}}
 </style>
 </head>
 <body>
@@ -671,6 +686,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)r
   else if(t.id==='pfMenuBtn'){const m=$('#pfMenu');m.hidden=!m.hidden;t.setAttribute('aria-expanded',!m.hidden)}
   else if('pf'in ds){closePfMenus();ds.pf==='add'?openPfForm(null):openPfList()}
   else if('pfedit'in ds)openPfForm(ds.pfedit);
+  else if('pfsort'in ds){const k=ds.pfsort;PF.sort(k==='name'?(a,b)=>a.farm.localeCompare(b.farm,'th'):k==='lv'?(a,b)=>(a.lv||0)-(b.lv||0):(a,b)=>(b.lv||0)-(a.lv||0));savePF();renderPfList();toast('จัดเรียงแล้ว')}
   else if('pfuse'in ds)usePf(ds.pfuse);
   else if(t.id==='pfSave')savePf();
   else if(t.id==='pfDel')delPf();
@@ -847,10 +863,14 @@ function openPfForm(id){closePfMenus();const p=id?pfById(id):null;pfEditId=p?p.i
   const v=p||{farm:'',email:'',lv:st.lv,tag:o.tag,target:o.target,cap:o.cap};
   $('#pf_farm').value=v.farm||'';$('#pf_email').value=v.email||'';$('#pf_lv').value=v.lv||'';$('#pf_tag').value=v.tag||'';$('#pf_target').value=v.target||'';$('#pf_cap').value=v.cap||'';
   closeSheets();openSheet($('#pfov'));setTimeout(()=>$('#pf_farm').focus({preventScroll:true}),60)}
-function openPfList(){closePfMenus();
-  $('#pfList').innerHTML=PF.length?PF.map(p=>`<div class="pfrow"><span class="pfav" aria-hidden="true"></span><div class="nm"><b>${esc(p.farm)}</b><small>${p.lv?'Lv '+esc(p.lv)+' · ':''}${esc(p.tag||'ไม่มี Tag')} · ${esc(p.email)}</small></div><button class="btn sm" data-pfedit="${esc(p.id)}">แก้ไข</button></div>`).join('')
+function openPfList(){closePfMenus();renderPfList();closeSheets();openSheet($('#pflov'))}
+function renderPfList(focusId,dir){
+  $('#pfList').innerHTML=PF.length?(PF.length>1?`<div class="pfsort"><span>จัดเรียง</span><button class="btn sm" data-pfsort="name">ชื่อ ก–ฮ, A–Z</button><button class="btn sm" data-pfsort="lv">เลเวลน้อย→มาก</button><button class="btn sm" data-pfsort="lvd">เลเวลมาก→น้อย</button></div><p class="pfhint">กดค้างที่ ☰ แล้วลากขึ้นลงเพื่อจัดลำดับ ลำดับนี้จะแสดงในปุ่มไก่ด้วย</p>`:'')+
+    PF.map((p,i)=>`<div class="pfrow" data-id="${esc(p.id)}"><span class="pfno">${i+1}</span><span class="pfav" aria-hidden="true"></span><div class="nm"><b>${esc(p.farm)}</b><small>${p.lv?'Lv '+esc(p.lv)+' · ':''}${esc(p.tag||'ไม่มี Tag')}${capTxt(p)} · ${esc(p.email)}</small></div>
+      <div class="pfact"><button class="btn sm" data-pfedit="${esc(p.id)}">แก้ไข</button>${PF.length>1?`<button class="pfgrip" data-pfgrip="${i}" aria-label="ลากเพื่อจัดลำดับ ${esc(p.farm)} (ใช้ลูกศรขึ้นลงบนแป้นพิมพ์ได้)"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>`:''}</div></div>`).join('')
     :'<p class="empty">ยังไม่มีข้อมูลที่บันทึกไว้<br>กด "+ เพิ่มข้อมูล" เพื่อเริ่ม</p>';
-  closeSheets();openSheet($('#pflov'))}
+  if(focusId){const r=$(`#pfList .pfrow[data-id="${CSS.escape(focusId)}"]`);if(r){r.classList.add('moved');if(dir){const g=r.querySelector('.pfgrip');g&&g.focus({preventScroll:true})}r.scrollIntoView({block:'nearest'})}}}
+function capTxt(p){return p.cap?` (${esc(Number(p.cap).toLocaleString('en-US'))})`:''}
 function savePf(){const g=id=>$(id).value.trim(),farm=g('#pf_farm'),email=g('#pf_email'),tag=g('#pf_tag');
   const err=farm?!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)?'กรุณากรอกอีเมลให้ถูกต้อง':'':'กรุณากรอกชื่อฟาร์ม';
   if(err){$('#pfErr').textContent=err;$(farm?'#pf_email':'#pf_farm').focus();return}
@@ -864,7 +884,26 @@ function delPf(){const p=pfById(pfEditId);if(!p)return;
 function usePf(id,quiet){const p=pfById(id);if(!p)return;const o=cur();closePfMenus();
   st.lv=p.lv||null;o.tag=p.tag||'';o.target=p.target||null;o.cap=p.cap||null;st.pf=p.id;$('#myLv').value=st.lv||'';
   renderAll();renderStrip();if(!quiet)toast(`ใช้ข้อมูลฟาร์ม ${p.farm} แล้ว`)}
-function renderPfPick(){$('#pfPickMenu').innerHTML=`<div class="pfph">ฟาร์มที่บันทึกไว้</div>`+(PF.length?PF.map(p=>`<button data-pfuse="${esc(p.id)}"${st.pf===p.id?' aria-current="true"':''}><span class="pfav sm" aria-hidden="true"></span><span class="pft"><b>${esc(p.farm)}</b><small>${p.lv?'Lv '+esc(p.lv):'ไม่ระบุเลเวล'}${p.tag?' · '+esc(p.tag):''}</small></span>${st.pf===p.id?'<span class="pfok">✓</span>':''}</button>`).join(''):'<p class="pfnone">ยังไม่มีข้อมูลที่บันทึกไว้</p>')+'<hr><button data-pf="add"><span class="fi">+</span>เพิ่มข้อมูล</button>'}
+function pfMove(i,j){if(j<0||j>=PF.length||i===j)return;const id=PF[i].id,[x]=PF.splice(i,1);PF.splice(j,0,x);savePF();renderPfList(id,1)}
+(function(){const L=$('#pfList');let D=null;
+  L.addEventListener('keydown',e=>{const g=e.target.closest('.pfgrip');if(!g||(e.key!=='ArrowUp'&&e.key!=='ArrowDown'))return;e.preventDefault();const i=+g.dataset.pfgrip;pfMove(i,i+(e.key==='ArrowUp'?-1:1))});
+  L.addEventListener('pointerdown',e=>{const g=e.target.closest('.pfgrip');if(!g||D||(e.button&&e.pointerType==='mouse'))return;e.preventDefault();
+    const rows=[...L.querySelectorAll('.pfrow')],from=+g.dataset.pfgrip,row=rows[from],rc=rows.map(r=>r.getBoundingClientRect()),step=rows.length>1?rc[1].top-rc[0].top:rc[0].height;
+    D={g,id:e.pointerId,rows,from,to:from,row,rc,step,y0:e.clientY,y:e.clientY,s0:L.scrollTop,raf:0};
+    try{g.setPointerCapture(e.pointerId)}catch(_){}
+    L.classList.add('pfList-drag');row.classList.add('drag');document.body.classList.add('pfdragging');navigator.vibrate&&navigator.vibrate(8);
+    const tick=()=>{if(!D)return;const lr=L.getBoundingClientRect(),z=48;let v=0;if(D.y<lr.top+z)v=-Math.ceil((lr.top+z-D.y)/6);else if(D.y>lr.bottom-z)v=Math.ceil((D.y-(lr.bottom-z))/6);if(v){L.scrollTop+=v;upd()}D.raf=requestAnimationFrame(tick)};D.raf=requestAnimationFrame(tick)});
+  function upd(){const d=D,dy=d.y-d.y0+(L.scrollTop-d.s0),n=d.rows.length,mx=(n-1-d.from)*d.step,mn=-d.from*d.step,cy=Math.max(mn,Math.min(mx,dy));
+    d.row.style.transform=`translateY(${cy}px)`;const c=d.rc[d.from].top+d.rc[d.from].height/2+cy;let to=0;
+    d.rows.forEach((r,k)=>{const m=d.rc[k].top+d.rc[k].height/2;if(k<d.from?m<c:k>d.from&&m<=c+.5)to++});d.to=to;
+    d.rows.forEach((r,k)=>{if(k===d.from)return;let t=0;if(d.from<to&&k>d.from&&k<=to)t=-d.step;else if(to<d.from&&k>=to&&k<d.from)t=d.step;r.style.transform=t?`translateY(${t}px)`:''})}
+  L.addEventListener('pointermove',e=>{if(!D||e.pointerId!==D.id)return;e.preventDefault();D.y=e.clientY;upd()});
+  const end=e=>{if(!D||e.pointerId!==D.id)return;const d=D;D=null;cancelAnimationFrame(d.raf);document.body.classList.remove('pfdragging');
+    d.row.classList.add('drop');d.row.classList.remove('drag');d.row.style.transform=`translateY(${(d.to-d.from)*d.step}px)`;
+    setTimeout(()=>{L.classList.remove('pfList-drag');if(d.to!==d.from){pfMove(d.from,d.to);toast('ย้ายลำดับแล้ว')}else renderPfList()},e.type==='pointercancel'?0:200)};
+  L.addEventListener('pointerup',end);L.addEventListener('pointercancel',end);
+})();
+function renderPfPick(){$('#pfPickMenu').innerHTML=`<div class="pfph">ฟาร์มที่บันทึกไว้</div>`+(PF.length?PF.map(p=>`<button data-pfuse="${esc(p.id)}"${st.pf===p.id?' aria-current="true"':''}><span class="pfav sm" aria-hidden="true"></span><span class="pft"><b>${esc(p.farm)}</b><small>${p.lv?'Lv '+esc(p.lv):'ไม่ระบุเลเวล'}${p.tag?' · '+esc(p.tag):''}${capTxt(p)}</small></span>${st.pf===p.id?'<span class="pfok">✓</span>':''}</button>`).join(''):'<p class="pfnone">ยังไม่มีข้อมูลที่บันทึกไว้</p>')+'<hr><button data-pf="add"><span class="fi">+</span>เพิ่มข้อมูล</button>'}
 $('#pf_tag').addEventListener('focus',e=>{if(!e.target.value)e.target.value='#'});
 $('#pf_tag').addEventListener('input',e=>{const t=e.target,v=fixTag(t.value);if(t.value!==v){t.value=v;t.setSelectionRange(v.length,v.length)}});
 $('#pf_tag').addEventListener('blur',e=>{if(e.target.value==='#')e.target.value=''});
