@@ -367,7 +367,7 @@ body.pfdragging{-webkit-user-select:none;user-select:none}
       <div class="pfmenu" id="pfMenu" hidden><button data-pf="add"><span class="fi">1</span>เพิ่มข้อมูล</button><button data-pf="edit"><span class="fi">2</span>แก้ไขข้อมูล</button></div></div></div>
   <div class="hdr-r">
     <label class="lvbox">เลเวลฟาร์ม <input id="myLv" type="number" min="1" max="200" inputmode="numeric" placeholder="—"></label>
-    <label class="lvbox">Tag Farm <input id="tagIn" class="tagin" type="text" autocomplete="off" spellcheck="false" maxlength="30" placeholder="#แท็กฟาร์ม"></label>
+    <label class="lvbox">Tag Farm <input id="tagIn" class="tagin" type="text" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" maxlength="30" placeholder="#ABC123" pattern="#[A-Z0-9]*" title="ภาษาอังกฤษพิมพ์ใหญ่ A–Z และตัวเลข 0–9 เท่านั้น"></label>
     <label class="lvbox" id="qBox">จำนวนของที่ต้องการสั่ง <span class="qc"><b id="qCount">0</b>/</span><input id="qTarget" class="qin" type="number" min="1" inputmode="numeric" placeholder="—"></label>
     <label class="lvbox" id="capBox">ความจุคลัง <input id="capIn" class="qin" type="number" min="1" inputmode="numeric" placeholder="—"></label>
     <button class="btn clr" id="clearTop">ล้างข้อมูล</button>
@@ -447,7 +447,7 @@ body.pfdragging{-webkit-user-select:none;user-select:none}
       <label class="full">ชื่อฟาร์ม *<input id="pf_farm" maxlength="40" autocomplete="off" placeholder="เช่น Thiztham Farm"></label>
       <label class="full">อีเมล *<input id="pf_email" type="email" inputmode="email" autocomplete="email" maxlength="80" placeholder="name@example.com"></label>
       <label>เลเวลฟาร์ม<input id="pf_lv" type="number" min="1" max="200" inputmode="numeric" placeholder="—"></label>
-      <label>Tag Farm<input id="pf_tag" class="tagin" maxlength="30" autocomplete="off" spellcheck="false" placeholder="#แท็กฟาร์ม"></label>
+      <label>Tag Farm<input id="pf_tag" class="tagin" type="text" maxlength="30" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" placeholder="#ABC123" pattern="#[A-Z0-9]*" title="ภาษาอังกฤษพิมพ์ใหญ่ A–Z และตัวเลข 0–9 เท่านั้น"></label>
       <label>จำนวนของที่ต้องการสั่ง<input id="pf_target" type="number" min="1" inputmode="numeric" placeholder="—"></label>
       <label>ความจุคลัง<input id="pf_cap" type="number" min="1" inputmode="numeric" placeholder="—"></label>
       <p class="pferr full" id="pfErr" role="alert"></p>
@@ -568,7 +568,14 @@ const renderHdr=()=>{const o=cur(),n=o.items.reduce((s,i)=>s+i[1],0),t=o.target|
   for(const id of ['#sq1','#sq2']){const e=$(id);e.innerHTML=`<b>${n.toLocaleString()}</b>/${t?t.toLocaleString():'—'}`;e.classList.toggle('over',!!t&&n>t);e.classList.toggle('hit',!!t&&n===t)}};
 const partialNote=it=>it.partial?'<span class="lvwarn">⚠ สูตรยังไม่ครบ (วิกิยังไม่ระบุส่วนผสมทั้งหมด)</span>':'';
 const overLv=it=>!!st.lv&&(it.lv||0)>st.lv;
-const fixTag=v=>{v=v.replace(/^[#\s]+/,'');return '#'+v};
+const fixTag=v=>'#'+String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+const normTag=v=>{const t=fixTag(v);return t.length>1?t:''};
+let tagWarnT=0;
+function tagInput(t){const raw=t.value,pos=t.selectionStart??raw.length,v=fixTag(raw);
+  if(raw!==v){const bad=raw.replace(/^#+/,'').toUpperCase().replace(/[A-Z0-9]/g,'').length>0;
+    const c=Math.max(1,fixTag(raw.slice(0,pos)).length);t.value=v;try{t.setSelectionRange(c,c)}catch(_){}
+    if(bad&&Date.now()-tagWarnT>2500){tagWarnT=Date.now();toast('Tag Farm ใช้ได้เฉพาะ A–Z และ 0–9')}}
+  return v}
 
 /* ---------- results ---------- */
 const nameBtn=it=>`<button class="linkb" data-rv="${esc(it.id)}"><b>${esc(it.th)}</b></button>`;
@@ -733,7 +740,7 @@ document.addEventListener('change',e=>{const t=e.target;
 $('#q').addEventListener('input',e=>{pk.q=e.target.value;renderGrid()});
 $('#rvQ').addEventListener('input',e=>{rv.q=e.target.value;renderRv()});
 $('#tagIn').addEventListener('focus',e=>{if(!e.target.value)e.target.value='#'});
-$('#tagIn').addEventListener('input',e=>{const t=e.target,v=fixTag(t.value);if(t.value!==v){t.value=v;t.setSelectionRange(v.length,v.length)}cur().tag=v.length>1?v:'';save()});
+$('#tagIn').addEventListener('input',e=>{const v=tagInput(e.target);cur().tag=v.length>1?v:'';save()});
 $('#tagIn').addEventListener('keydown',e=>{const t=e.target;if((e.key==='Backspace'&&t.selectionStart<=1&&t.selectionEnd<=1)||(e.key==='Delete'&&t.selectionStart===0&&t.selectionEnd===0))e.preventDefault()});
 $('#tagIn').addEventListener('blur',e=>{if(e.target.value==='#')e.target.value=''});
 $('#qTarget').addEventListener('input',e=>{cur().target=n0(e.target.value)||null;renderHdr();save()});
@@ -853,6 +860,7 @@ $('#dlgov').addEventListener('click',e=>{if(e.target.id==='dlgov')closeDlg()});
 
 /* saved farm profiles (kept in this browser) */
 let PF=[];try{PF=JSON.parse(localStorage.getItem('hdq-profiles')||'[]');if(!Array.isArray(PF))PF=[]}catch(e){PF=[]}
+PF.forEach(p=>{if(p&&p.tag)p.tag=normTag(p.tag)});
 const savePF=()=>{try{localStorage.setItem('hdq-profiles',JSON.stringify(PF));return true}catch(e){toast('บันทึกในเบราว์เซอร์นี้ไม่ได้');return false}};
 let pfEditId=null;
 const pfById=id=>PF.find(p=>p.id===id);
@@ -871,7 +879,7 @@ function renderPfList(focusId,dir){
     :'<p class="empty">ยังไม่มีข้อมูลที่บันทึกไว้<br>กด "+ เพิ่มข้อมูล" เพื่อเริ่ม</p>';
   if(focusId){const r=$(`#pfList .pfrow[data-id="${CSS.escape(focusId)}"]`);if(r){r.classList.add('moved');if(dir){const g=r.querySelector('.pfgrip');g&&g.focus({preventScroll:true})}r.scrollIntoView({block:'nearest'})}}}
 function capTxt(p){return p.cap?` (${esc(Number(p.cap).toLocaleString('en-US'))})`:''}
-function savePf(){const g=id=>$(id).value.trim(),farm=g('#pf_farm'),email=g('#pf_email'),tag=g('#pf_tag');
+function savePf(){const g=id=>$(id).value.trim(),farm=g('#pf_farm'),email=g('#pf_email'),tag=normTag(g('#pf_tag'));
   const err=farm?!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)?'กรุณากรอกอีเมลให้ถูกต้อง':'':'กรุณากรอกชื่อฟาร์ม';
   if(err){$('#pfErr').textContent=err;$(farm?'#pf_email':'#pf_farm').focus();return}
   const rec={id:pfEditId||('p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)),farm,email,lv:n0(g('#pf_lv'))||null,tag:tag.length>1?tag:'',target:n0(g('#pf_target'))||null,cap:n0(g('#pf_cap'))||null};
@@ -882,7 +890,7 @@ function savePf(){const g=id=>$(id).value.trim(),farm=g('#pf_farm'),email=g('#pf
 function delPf(){const p=pfById(pfEditId);if(!p)return;
   showDlg('ลบข้อมูลนี้?',`<p>ข้อมูลฟาร์ม <b>${esc(p.farm)}</b> จะถูกลบออกจากเบราว์เซอร์นี้ และกู้คืนไม่ได้</p>`,[{label:'ยกเลิก'},{label:'ลบ',pri:1,fn:()=>{PF=PF.filter(x=>x.id!==p.id);savePF();if(st.pf===p.id)st.pf=null;closeSheets();renderPfInfo();toast(`ลบ ${p.farm} แล้ว`)}}])}
 function usePf(id,quiet){const p=pfById(id);if(!p)return;const o=cur();closePfMenus();
-  st.lv=p.lv||null;o.tag=p.tag||'';o.target=p.target||null;o.cap=p.cap||null;st.pf=p.id;$('#myLv').value=st.lv||'';
+  st.lv=p.lv||null;o.tag=normTag(p.tag);o.target=p.target||null;o.cap=p.cap||null;st.pf=p.id;$('#myLv').value=st.lv||'';
   renderAll();renderStrip();if(!quiet)toast(`ใช้ข้อมูลฟาร์ม ${p.farm} แล้ว`)}
 function pfMove(i,j){if(j<0||j>=PF.length||i===j)return;const id=PF[i].id,[x]=PF.splice(i,1);PF.splice(j,0,x);savePF();renderPfList(id,1)}
 (function(){const L=$('#pfList');let D=null;
@@ -905,7 +913,8 @@ function pfMove(i,j){if(j<0||j>=PF.length||i===j)return;const id=PF[i].id,[x]=PF
 })();
 function renderPfPick(){$('#pfPickMenu').innerHTML=`<div class="pfph">ฟาร์มที่บันทึกไว้</div>`+(PF.length?PF.map(p=>`<button data-pfuse="${esc(p.id)}"${st.pf===p.id?' aria-current="true"':''}><span class="pfav sm" aria-hidden="true"></span><span class="pft"><b>${esc(p.farm)}</b><small>${p.lv?'Lv '+esc(p.lv):'ไม่ระบุเลเวล'}${p.tag?' · '+esc(p.tag):''}${capTxt(p)}</small></span>${st.pf===p.id?'<span class="pfok">✓</span>':''}</button>`).join(''):'<p class="pfnone">ยังไม่มีข้อมูลที่บันทึกไว้</p>')+'<hr><button data-pf="add"><span class="fi">+</span>เพิ่มข้อมูล</button>'}
 $('#pf_tag').addEventListener('focus',e=>{if(!e.target.value)e.target.value='#'});
-$('#pf_tag').addEventListener('input',e=>{const t=e.target,v=fixTag(t.value);if(t.value!==v){t.value=v;t.setSelectionRange(v.length,v.length)}});
+$('#pf_tag').addEventListener('input',e=>tagInput(e.target));
+$('#pf_tag').addEventListener('keydown',e=>{const t=e.target;if((e.key==='Backspace'&&t.selectionStart<=1&&t.selectionEnd<=1)||(e.key==='Delete'&&t.selectionStart===0&&t.selectionEnd===0))e.preventDefault()});
 $('#pf_tag').addEventListener('blur',e=>{if(e.target.value==='#')e.target.value=''});
 $('#pfForm').addEventListener('submit',e=>{e.preventDefault();savePf()});
 $('#pfForm').addEventListener('input',()=>{$('#pfErr').textContent=''});
