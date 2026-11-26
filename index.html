@@ -315,16 +315,46 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
 @media(prefers-reduced-motion:reduce){.lvbox.needfix{animation:none;outline:3px solid var(--warn)}}
 .dwarn{margin:10px 0 0!important;padding:9px 12px;border-radius:12px;background:light-dark(rgba(254,226,226,.9),rgba(220,38,38,.2));color:light-dark(#b91c1c,#ff8a8a)!important;font-weight:500}
 .dlgf .btn:disabled{opacity:.45;cursor:not-allowed}
+/* profiles */
+.htop{display:flex;align-items:flex-start;gap:12px;width:100%}.htitle{flex:1;min-width:0}
+.pfinfo{margin:4px 0 0;font-size:13px;color:var(--soft);overflow-wrap:anywhere}.pfinfo b{color:var(--ink);font-weight:500}
+header .hdr-r{margin-left:0;width:100%}
+.pfwrap{position:relative;flex:none}.pfbtn{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}.pfbtn[aria-expanded=true] svg{transform:rotate(180deg)}
+.pfmenu{position:absolute;right:0;top:calc(100% + 8px);z-index:25;min-width:210px;padding:6px;border-radius:20px;background:var(--glass-strong);-webkit-backdrop-filter:blur(30px) saturate(190%);backdrop-filter:blur(30px) saturate(190%);border:1px solid var(--edge);box-shadow:inset 0 1px 0 var(--edge),0 18px 44px -12px var(--shade)}
+.pfmenu button{display:flex;align-items:center;gap:10px;width:100%;min-height:46px;border:0;background:none;border-radius:14px;padding:6px 12px;text-align:left;font-size:15px;color:var(--ink)}
+.pfmenu button:hover,.pfmenu button:focus-visible{background:var(--acc2)}.pfmenu .fi{width:24px;height:24px;border-radius:8px;display:inline-grid;place-items:center;background:var(--acc2);color:var(--acc);font-weight:600;font-size:13px}
+.pfsheet{height:auto;max-height:min(92vh,760px)}.pfbody{flex:1;overflow-y:auto;padding:16px}
+.pfform{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0}.pfform .full{grid-column:1/-1}
+.pfform label{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--soft)}
+.pfform input{height:46px;border-radius:14px;border:1px solid var(--line);background:var(--tint);padding:0 14px;font-size:16px;color:var(--ink);box-shadow:inset 0 1px 2px light-dark(rgba(30,80,140,.1),rgba(0,0,0,.3))}
+.pferr{margin:0;min-height:1.2em;color:var(--warn);font-size:14px;font-weight:500}
+.pff{gap:8px}.pff .btn{min-height:46px}
+.pfrow{display:flex;align-items:center;gap:12px;padding:10px 12px;margin-bottom:8px;border:1px solid var(--line);border-radius:18px;background:var(--card);box-shadow:inset 0 1px 0 var(--edge)}
+.pfrow .nm small{display:block;font-size:12px;color:var(--soft);overflow-wrap:anywhere}
+.pfav{flex:none;width:44px;height:44px;border-radius:999px;background:url(chicken.webp) center 30%/120% no-repeat,var(--acc2);border:1px solid var(--line)}.pfav.sm{width:34px;height:34px}
+.chkbtn{position:relative;width:58px;height:58px;padding:0;border-radius:999px;display:grid;place-items:center;overflow:hidden;
+  background:linear-gradient(180deg,light-dark(rgba(255,248,220,.6),rgba(255,240,200,.18)),light-dark(rgba(255,226,150,.45),rgba(255,210,120,.12)));
+  -webkit-backdrop-filter:blur(14px) saturate(190%);backdrop-filter:blur(14px) saturate(190%);border:1px solid light-dark(rgba(255,255,255,.8),rgba(255,255,255,.28));
+  box-shadow:inset 0 1.5px 0 light-dark(rgba(255,255,255,.95),rgba(255,255,255,.35)),inset 0 -2px 6px light-dark(rgba(160,110,20,.18),rgba(0,0,0,.35)),0 10px 26px -8px light-dark(rgba(30,90,160,.45),rgba(0,0,0,.65))}
+.chkbtn img{width:46px;height:46px;object-fit:contain;filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.25))}
+.fabrow .chkbtn{order:0}
+#pfPickMenu{min-width:240px}#pfPickMenu button{gap:10px}#pfPickMenu button[aria-current=true]{background:var(--acc2)}
+.pft{display:flex;flex-direction:column;min-width:0;line-height:1.25}.pft b{font-weight:500}.pft small{font-size:12px;color:var(--soft);margin:0}
+.pfok{margin-left:auto;color:var(--ok);font-weight:700}.pfph{padding:6px 12px 4px;font-size:12px;color:var(--soft)}.pfnone{margin:4px 12px 8px;font-size:14px;color:var(--soft)}
+@media(max-width:600px){.htop h1{font-size:26px}.pfbtn{min-height:40px;padding:0 12px;font-size:14px}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-  <div><h1>Hay Day Item by Thiztham</h1></div>
+  <div class="htop"><div class="htitle"><h1>Hay Day Item by Thiztham</h1><p class="pfinfo" id="pfInfo" hidden></p></div>
+    <div class="pfwrap"><button class="btn pfbtn" id="pfMenuBtn" aria-expanded="false" aria-controls="pfMenu">ข้อมูลที่บันทึก <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="pfmenu" id="pfMenu" hidden><button data-pf="add"><span class="fi">1</span>เพิ่มข้อมูล</button><button data-pf="edit"><span class="fi">2</span>แก้ไขข้อมูล</button></div></div></div>
   <div class="hdr-r">
     <label class="lvbox">เลเวลฟาร์ม <input id="myLv" type="number" min="1" max="200" inputmode="numeric" placeholder="—"></label>
     <label class="lvbox">Tag Farm <input id="tagIn" class="tagin" type="text" autocomplete="off" spellcheck="false" maxlength="30" placeholder="#แท็กฟาร์ม"></label>
     <label class="lvbox" id="qBox">จำนวนของที่ต้องการสั่ง <span class="qc"><b id="qCount">0</b>/</span><input id="qTarget" class="qin" type="number" min="1" inputmode="numeric" placeholder="—"></label>
+    <label class="lvbox" id="capBox">ความจุคลัง <input id="capIn" class="qin" type="number" min="1" inputmode="numeric" placeholder="—"></label>
     <button class="btn clr" id="clearTop">ล้างข้อมูล</button>
   </div>
 </header>
@@ -387,12 +417,34 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
     <div id="rvBody" class="rvlist"></div>
   </div>
 </div>
-<div class="fab" id="fab"><div class="fabmenu" id="fabMenu" hidden></div><div class="fabrow"><button class="cartbtn" id="cartBtn" aria-label="ไปที่รายการสรุป"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M3 4h2.2l2.1 10.2a1.6 1.6 0 0 0 1.6 1.3h8.3a1.6 1.6 0 0 0 1.6-1.2L20.5 8H6.4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="19.5" r="1.6" fill="currentColor"/><circle cx="17" cy="19.5" r="1.6" fill="currentColor"/></svg><span class="cbadge" id="cartN" hidden>0</span></button><button class="fabbtn" id="fabBtn" aria-expanded="false" aria-controls="fabMenu" aria-label="ไปที่หมวด"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path class="i-open" d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/><path class="i-close" d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg></button></div></div>
+<div class="fab" id="fab"><div class="fabmenu" id="pfPickMenu" hidden></div><div class="fabmenu" id="fabMenu" hidden></div><div class="fabrow"><button class="chkbtn" id="pfPick" aria-expanded="false" aria-controls="pfPickMenu" aria-label="เลือกฟาร์มที่บันทึกไว้"><img src="chicken.webp" alt="" width="46" height="46"></button><button class="cartbtn" id="cartBtn" aria-label="ไปที่รายการสรุป"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M3 4h2.2l2.1 10.2a1.6 1.6 0 0 0 1.6 1.3h8.3a1.6 1.6 0 0 0 1.6-1.2L20.5 8H6.4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="19.5" r="1.6" fill="currentColor"/><circle cx="17" cy="19.5" r="1.6" fill="currentColor"/></svg><span class="cbadge" id="cartN" hidden>0</span></button><button class="fabbtn" id="fabBtn" aria-expanded="false" aria-controls="fabMenu" aria-label="ไปที่หมวด"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path class="i-open" d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/><path class="i-close" d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg></button></div></div>
 <div class="ov" id="rcov" role="dialog" aria-modal="true" aria-labelledby="rct">
   <div class="sheet rcsheet">
     <div class="shd"><h2 id="rct">สรุปรายการสั่งซื้อ</h2><button class="x ml" data-close aria-label="ปิด">×</button></div>
     <div class="rcbody" id="rcBody"></div>
     <div class="sft rcf"><button class="btn" id="rcCopy">คัดลอกข้อความ</button><button class="btn" id="rcPdf">PDF</button><button class="btn pri" id="rcDone">เสร็จสิ้น</button></div>
+  </div>
+</div>
+<div class="ov" id="pfov" role="dialog" aria-modal="true" aria-labelledby="pfT">
+  <div class="sheet pfsheet">
+    <div class="shd"><h2 id="pfT">เพิ่มข้อมูล</h2><button class="x ml" data-close aria-label="ปิด">×</button></div>
+    <div class="pfbody"><form class="pfform" id="pfForm" novalidate>
+      <label class="full">ชื่อฟาร์ม *<input id="pf_farm" maxlength="40" autocomplete="off" placeholder="เช่น Thiztham Farm"></label>
+      <label class="full">อีเมล *<input id="pf_email" type="email" inputmode="email" autocomplete="email" maxlength="80" placeholder="name@example.com"></label>
+      <label>เลเวลฟาร์ม<input id="pf_lv" type="number" min="1" max="200" inputmode="numeric" placeholder="—"></label>
+      <label>Tag Farm<input id="pf_tag" class="tagin" maxlength="30" autocomplete="off" spellcheck="false" placeholder="#แท็กฟาร์ม"></label>
+      <label>จำนวนของที่ต้องการสั่ง<input id="pf_target" type="number" min="1" inputmode="numeric" placeholder="—"></label>
+      <label>ความจุคลัง<input id="pf_cap" type="number" min="1" inputmode="numeric" placeholder="—"></label>
+      <p class="pferr full" id="pfErr" role="alert"></p>
+    </form></div>
+    <div class="sft pff"><button class="btn clr" id="pfDel" hidden>ลบข้อมูลนี้</button><button class="btn ml" data-close>ยกเลิก</button><button class="btn pri" id="pfSave">บันทึก</button></div>
+  </div>
+</div>
+<div class="ov" id="pflov" role="dialog" aria-modal="true" aria-labelledby="pflT">
+  <div class="sheet pfsheet">
+    <div class="shd"><h2 id="pflT">แก้ไขข้อมูล</h2><button class="x ml" data-close aria-label="ปิด">×</button></div>
+    <div class="pfbody" id="pfList"></div>
+    <div class="sft"><button class="btn ml" data-pf="add">+ เพิ่มข้อมูล</button><button class="btn pri" data-close>เสร็จ</button></div>
   </div>
 </div>
 <div class="dlgov" id="dlgov" role="alertdialog" aria-modal="true" aria-labelledby="dlgT" aria-describedby="dlgB"><div class="dlg"><h2 id="dlgT"></h2><div id="dlgB" class="dlgb"></div><div class="dlgf" id="dlgF"></div></div></div>
@@ -491,6 +543,8 @@ function renderOrder(){
 const renderHdr=()=>{const o=cur(),n=o.items.reduce((s,i)=>s+i[1],0),t=o.target||0;
   if(document.activeElement!==$('#tagIn'))$('#tagIn').value=o.tag||'';
   if(document.activeElement!==$('#qTarget'))$('#qTarget').value=t||'';
+  if(document.activeElement!==$('#capIn'))$('#capIn').value=o.cap||'';
+  renderPfInfo();
   $('#qCount').textContent=n.toLocaleString();
   $('#qBox').classList.toggle('over',!!t&&n>t);$('#qBox').classList.toggle('hit',!!t&&n===t);
   {const over=!!t&&n>t,w=$('#cfWarn');$('#confirmBtn').disabled=!o.items.length||over;w.hidden=!over;
@@ -614,6 +668,13 @@ document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)r
   else if('bfold'in ds){const k=+ds.bfold,f=new Set(st.fold||[]);if(f.has(k))f.delete(k);else{f.add(k);if(bd.open!=null&&BGS[k].gs.includes(BG[bd.open])){bd.open=null;bd.sel.clear()}}st.fold=[...f];save();renderStrip()}
   else if('ofold'in ds){const f=new Set(st.ofold||[]),k=ds.ofold;f.has(k)?f.delete(k):f.add(k);st.ofold=[...f];save();renderOrder()}
   else if(t.id==='resFold'){const sec=$('#resSec'),f=sec.classList.toggle('resfold');t.setAttribute('aria-expanded',!f);t.querySelector('span').textContent=f?'แสดง':'ซ่อน'}
+  else if(t.id==='pfMenuBtn'){const m=$('#pfMenu');m.hidden=!m.hidden;t.setAttribute('aria-expanded',!m.hidden)}
+  else if('pf'in ds){closePfMenus();ds.pf==='add'?openPfForm(null):openPfList()}
+  else if('pfedit'in ds)openPfForm(ds.pfedit);
+  else if('pfuse'in ds)usePf(ds.pfuse);
+  else if(t.id==='pfSave')savePf();
+  else if(t.id==='pfDel')delPf();
+  else if(t.id==='pfPick'){const m=$('#pfPickMenu'),open=m.hidden;setFab(false);if(open)renderPfPick();m.hidden=!open;t.setAttribute('aria-expanded',open)}
   else if(t.id==='confirmBtn')recheck();
   else if(t.id==='rcCopy'){if(!needAll())copyReceipt()}
   else if(t.id==='rcPdf'){if(!needAll())makePdf(t)}
@@ -626,7 +687,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)r
   else if('inc10'in ds){o.items[ds.inc10][1]+=10;renderAll()}
   else if('inc50'in ds){o.items[ds.inc50][1]+=50;renderAll()}
   else if('inc100'in ds){o.items[ds.inc100][1]+=100;renderAll()}
-  else if(t.id==='clearTop')arm(t,'ล้างข้อมูล',()=>{st.lv=null;o.tag='';o.target=null;$('#myLv').value='';$('#tagIn').value='';$('#qTarget').value='';t.textContent='ล้างข้อมูล';renderAll();renderStrip();toast('ล้างเลเวลฟาร์ม Tag Farm และจำนวนที่ต้องการสั่งแล้ว')});
+  else if(t.id==='clearTop')arm(t,'ล้างข้อมูล',()=>{st.lv=null;o.tag='';o.target=null;o.cap=null;st.pf=null;$('#myLv').value='';$('#tagIn').value='';$('#qTarget').value='';$('#capIn').value='';t.textContent='ล้างข้อมูล';renderAll();renderStrip();toast('ล้างเลเวลฟาร์ม Tag Farm และจำนวนที่ต้องการสั่งแล้ว')});
   else if(t.id==='clearItems')arm(t,'ล้างข้อมูล',()=>{o.items=[];bd.sel.clear();t.textContent='ล้างข้อมูล';renderAll();renderStrip();toast('ล้างไอเทมที่เลือกแล้ว')});
   else if('dec'in ds){const x=o.items[ds.dec];if(x[1]>1){x[1]--;renderAll()}}
   else if('del'in ds){o.items.splice(ds.del,1);renderAll()}
@@ -687,7 +748,7 @@ function copyReceipt(){const o=cur(),n=o.items.reduce((a,x)=>a+x[1],0),t=o.targe
   (navigator.clipboard?navigator.clipboard.writeText(lines.join('\n')):Promise.reject()).then(()=>toast('คัดลอกแล้ว'),()=>toast('คัดลอกไม่ได้ในหน้านี้'))}
 
 function resetAll(){st.orders=[];st.cur=null;newOrder();Object.assign(st,{stock:{},mode:'raw',tab:'raw',scope:'cur',lv:null,fold:[],ofold:[]});
-  bd.open=null;bd.sel.clear();for(const id of ['#myLv','#tagIn','#qTarget','#iq'])$(id).value='';
+  bd.open=null;bd.sel.clear();st.pf=null;for(const id of ['#myLv','#tagIn','#qTarget','#capIn','#iq'])$(id).value='';
   $('#resSec').classList.add('resfold');$('#resFold').setAttribute('aria-expanded','false');$('#resFold span').textContent='แสดง';
   closeSheets();setFab(false);renderAll();renderStrip();scrollTo({top:0});toast('เสร็จสิ้น · ล้างข้อมูลแล้ว')}
 /* PDF export (drawn on canvas so Thai text and images render, then wrapped with jsPDF) */
@@ -774,6 +835,45 @@ function recheck(){const o=cur(),n=o.items.reduce((a,x)=>a+x[1],0),t=o.target||0
     [{label:'กลับไปแก้ไข',fn:()=>{if(m.length)goField(m[0])}},{label:'ถัดไป',pri:1,off:m.length>0,fn:()=>{renderReceipt();openSheet($('#rcov'));$('#rcov .rcbody').scrollTop=0}}])}
 $('#dlgov').addEventListener('click',e=>{if(e.target.id==='dlgov')closeDlg()});
 
+/* saved farm profiles (kept in this browser) */
+let PF=[];try{PF=JSON.parse(localStorage.getItem('hdq-profiles')||'[]');if(!Array.isArray(PF))PF=[]}catch(e){PF=[]}
+const savePF=()=>{try{localStorage.setItem('hdq-profiles',JSON.stringify(PF));return true}catch(e){toast('บันทึกในเบราว์เซอร์นี้ไม่ได้');return false}};
+let pfEditId=null;
+const pfById=id=>PF.find(p=>p.id===id);
+function renderPfInfo(){const p=st.pf&&pfById(st.pf),e=$('#pfInfo');e.hidden=!p;if(p)e.innerHTML=`ฟาร์ม <b>${esc(p.farm)}</b> · ${esc(p.email)}`}
+function closePfMenus(){$('#pfMenu').hidden=true;$('#pfMenuBtn').setAttribute('aria-expanded','false');$('#pfPickMenu').hidden=true;$('#pfPick').setAttribute('aria-expanded','false')}
+function openPfForm(id){closePfMenus();const p=id?pfById(id):null;pfEditId=p?p.id:null;const o=cur();
+  $('#pfT').textContent=p?'แก้ไขข้อมูล':'เพิ่มข้อมูล';$('#pfDel').hidden=!p;$('#pfErr').textContent='';
+  const v=p||{farm:'',email:'',lv:st.lv,tag:o.tag,target:o.target,cap:o.cap};
+  $('#pf_farm').value=v.farm||'';$('#pf_email').value=v.email||'';$('#pf_lv').value=v.lv||'';$('#pf_tag').value=v.tag||'';$('#pf_target').value=v.target||'';$('#pf_cap').value=v.cap||'';
+  closeSheets();openSheet($('#pfov'));setTimeout(()=>$('#pf_farm').focus({preventScroll:true}),60)}
+function openPfList(){closePfMenus();
+  $('#pfList').innerHTML=PF.length?PF.map(p=>`<div class="pfrow"><span class="pfav" aria-hidden="true"></span><div class="nm"><b>${esc(p.farm)}</b><small>${p.lv?'Lv '+esc(p.lv)+' · ':''}${esc(p.tag||'ไม่มี Tag')} · ${esc(p.email)}</small></div><button class="btn sm" data-pfedit="${esc(p.id)}">แก้ไข</button></div>`).join('')
+    :'<p class="empty">ยังไม่มีข้อมูลที่บันทึกไว้<br>กด "+ เพิ่มข้อมูล" เพื่อเริ่ม</p>';
+  closeSheets();openSheet($('#pflov'))}
+function savePf(){const g=id=>$(id).value.trim(),farm=g('#pf_farm'),email=g('#pf_email'),tag=g('#pf_tag');
+  const err=farm?!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)?'กรุณากรอกอีเมลให้ถูกต้อง':'':'กรุณากรอกชื่อฟาร์ม';
+  if(err){$('#pfErr').textContent=err;$(farm?'#pf_email':'#pf_farm').focus();return}
+  const rec={id:pfEditId||('p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)),farm,email,lv:n0(g('#pf_lv'))||null,tag:tag.length>1?tag:'',target:n0(g('#pf_target'))||null,cap:n0(g('#pf_cap'))||null};
+  const i=PF.findIndex(p=>p.id===rec.id);if(i>=0)PF[i]=rec;else PF.push(rec);
+  if(!savePF())return;closeSheets();
+  if(st.pf===rec.id)usePf(rec.id,true);else renderPfInfo();
+  toast(i>=0?`แก้ไขข้อมูล ${rec.farm} แล้ว`:`บันทึก ${rec.farm} แล้ว · เลือกใช้ได้จากปุ่มไก่`)}
+function delPf(){const p=pfById(pfEditId);if(!p)return;
+  showDlg('ลบข้อมูลนี้?',`<p>ข้อมูลฟาร์ม <b>${esc(p.farm)}</b> จะถูกลบออกจากเบราว์เซอร์นี้ และกู้คืนไม่ได้</p>`,[{label:'ยกเลิก'},{label:'ลบ',pri:1,fn:()=>{PF=PF.filter(x=>x.id!==p.id);savePF();if(st.pf===p.id)st.pf=null;closeSheets();renderPfInfo();toast(`ลบ ${p.farm} แล้ว`)}}])}
+function usePf(id,quiet){const p=pfById(id);if(!p)return;const o=cur();closePfMenus();
+  st.lv=p.lv||null;o.tag=p.tag||'';o.target=p.target||null;o.cap=p.cap||null;st.pf=p.id;$('#myLv').value=st.lv||'';
+  renderAll();renderStrip();if(!quiet)toast(`ใช้ข้อมูลฟาร์ม ${p.farm} แล้ว`)}
+function renderPfPick(){$('#pfPickMenu').innerHTML=`<div class="pfph">ฟาร์มที่บันทึกไว้</div>`+(PF.length?PF.map(p=>`<button data-pfuse="${esc(p.id)}"${st.pf===p.id?' aria-current="true"':''}><span class="pfav sm" aria-hidden="true"></span><span class="pft"><b>${esc(p.farm)}</b><small>${p.lv?'Lv '+esc(p.lv):'ไม่ระบุเลเวล'}${p.tag?' · '+esc(p.tag):''}</small></span>${st.pf===p.id?'<span class="pfok">✓</span>':''}</button>`).join(''):'<p class="pfnone">ยังไม่มีข้อมูลที่บันทึกไว้</p>')+'<hr><button data-pf="add"><span class="fi">+</span>เพิ่มข้อมูล</button>'}
+$('#pf_tag').addEventListener('focus',e=>{if(!e.target.value)e.target.value='#'});
+$('#pf_tag').addEventListener('input',e=>{const t=e.target,v=fixTag(t.value);if(t.value!==v){t.value=v;t.setSelectionRange(v.length,v.length)}});
+$('#pf_tag').addEventListener('blur',e=>{if(e.target.value==='#')e.target.value=''});
+$('#pfForm').addEventListener('submit',e=>{e.preventDefault();savePf()});
+$('#pfForm').addEventListener('input',()=>{$('#pfErr').textContent=''});
+$('#capIn').addEventListener('input',e=>{cur().cap=n0(e.target.value)||null});
+document.addEventListener('click',e=>{if(!$('#pfMenu').hidden&&!e.target.closest('.pfwrap')){$('#pfMenu').hidden=true;$('#pfMenuBtn').setAttribute('aria-expanded','false')}
+  if(!$('#pfPickMenu').hidden&&!e.target.closest('#fab')){$('#pfPickMenu').hidden=true;$('#pfPick').setAttribute('aria-expanded','false')}});
+
 /* floating jump menu */
 const fabTargets=()=>{const n=cur().items.length,secs=[...document.querySelectorAll('.bsec')];
   return [['top','↑','บนสุด (เลเวล / Tag Farm)',''],['items','▦','ไอเทม',''],...BGS.map((g,i)=>['g'+i,String(i+1),g.t,g.gs.length+' เครื่อง','sub']),['hr'],['summary','≡','รายการสรุป',n?n+' รายการ':'ว่าง'],['results','✓','ต้องเตรียมอะไรบ้าง','']]};
@@ -784,7 +884,7 @@ function jump(k){const sm=matchMedia('(prefers-reduced-motion: reduce)').matches
   const el=k==='items'?$('#oh').closest('section'):k==='summary'?$('#sh').closest('section'):k==='results'?$('#rh').closest('section'):document.querySelectorAll('.bsec')[+k.slice(1)];
   el?.scrollIntoView({behavior:sm,block:'start'})}
 $('#cartBtn').addEventListener('click',e=>{e.stopPropagation();setFab(false);jump('summary')});
-$('#fabBtn').addEventListener('click',e=>{e.stopPropagation();setFab($('#fabMenu').hidden)});
+$('#fabBtn').addEventListener('click',e=>{e.stopPropagation();$('#pfPickMenu').hidden=true;$('#pfPick').setAttribute('aria-expanded','false');setFab($('#fabMenu').hidden)});
 $('#fabMenu').addEventListener('click',e=>{const b=e.target.closest('[data-jump]');if(!b)return;e.stopPropagation();setFab(false);jump(b.dataset.jump)});
 document.addEventListener('click',e=>{if(!$('#fabMenu').hidden&&!e.target.closest('#fab'))setFab(false)});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#fabMenu').hidden){setFab(false);$('#fabBtn').focus()}});
