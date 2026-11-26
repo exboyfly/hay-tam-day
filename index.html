@@ -357,6 +357,32 @@ body.pfdragging{-webkit-user-select:none;user-select:none}
 .pfrow.moved{animation:pfmoved .5s ease-out}@keyframes pfmoved{from{background:var(--acc2)}to{background:var(--card)}}
 @media(prefers-reduced-motion:reduce){.pfrow.moved{animation:none}.pfList-drag .pfrow,.pfrow.drag,.pfrow.drop{transition:none!important}}
 @media(max-width:600px){.pfrow{gap:8px;padding:8px 10px}.pfrow .pfav{display:none}}
+
+/* Landscape: items + prep list on the left, summary on the right (portrait unchanged) */
+@media (orientation:landscape) and (min-width:700px){
+  .grid2{grid-template-columns:minmax(0,7fr) minmax(0,5fr);grid-template-areas:"items sum" "val sum" "res sum";grid-template-rows:auto auto 1fr;align-items:start}
+  .grid2>.lcol{display:contents}
+  .grid2>.lcol>section[aria-labelledby="oh"]{grid-area:items}
+  .grid2>.lcol>#valSec{grid-area:val}
+  .grid2>#resSec{grid-area:res}
+  .grid2>.lcol>section[aria-labelledby="sh"]{grid-area:sum;position:sticky;top:14px;max-height:calc(100dvh - 28px);display:flex;flex-direction:column}
+  .grid2>.lcol>section[aria-labelledby="sh"] .olist{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+  .wrap{padding-right:calc(max(16px,env(safe-area-inset-right)) + 74px)}
+}
+@media (orientation:landscape) and (min-width:700px) and (max-height:560px){
+  .grid2>.lcol>section[aria-labelledby="sh"]{top:8px;max-height:calc(100dvh - 16px)}
+  .grid2>.lcol>section[aria-labelledby="sh"] .chd{padding:10px 14px 4px;gap:4px 8px}
+  .grid2>.lcol>section[aria-labelledby="sh"] .chd h2{font-size:20px;white-space:nowrap}
+  .grid2>.lcol>section[aria-labelledby="sh"] .cnt{font-size:13px;white-space:nowrap}
+  .grid2>.lcol>section[aria-labelledby="sh"] .orow{padding:8px 4px;row-gap:6px}
+  .grid2>.lcol>section[aria-labelledby="sh"] .orow .nm{flex-basis:calc(100% - 106px)}
+  .grid2>.lcol>section[aria-labelledby="sh"] .orow .step{margin-left:0}
+  .grid2>.lcol>section[aria-labelledby="sh"] .step button{width:32px}.grid2>.lcol>section[aria-labelledby="sh"] .step input{width:40px}.grid2>.lcol>section[aria-labelledby="sh"] .step .p10{padding:0 5px;font-size:14px;min-width:0}
+  .grid2>.lcol>section[aria-labelledby="sh"] .ogrp{gap:8px;padding:4px 8px 4px 6px}.grid2>.lcol>section[aria-labelledby="sh"] .ogrp small{font-size:12px;white-space:nowrap;margin-left:auto}
+  .grid2>.lcol>section[aria-labelledby="sh"] .qfoot{margin:0 14px 8px;padding:5px 12px}
+  .grid2>.lcol>section[aria-labelledby="sh"] .cfm{padding:0 14px 12px}
+  .grid2>.lcol>section[aria-labelledby="sh"] .cfm .btn{min-height:44px;font-size:16px}
+}
 </style>
 </head>
 <body>
