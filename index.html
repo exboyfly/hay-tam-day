@@ -367,10 +367,13 @@ body.pfdragging{-webkit-user-select:none;user-select:none}
   .grid2>#resSec{grid-area:res}
   .grid2>.lcol>section[aria-labelledby="sh"]{grid-area:sum;position:sticky;top:14px;max-height:calc(100dvh - 28px);display:flex;flex-direction:column}
   .grid2>.lcol>section[aria-labelledby="sh"] .olist{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain}
-  .wrap{padding-right:calc(max(16px,env(safe-area-inset-right)) + 74px)}
+  .fabrow{flex-direction:row}
+  .fabrow .cartbtn{order:0}.fabrow .fabbtn{order:1}.fabrow .chkbtn{order:2}
+  .grid2>.lcol>section[aria-labelledby="sh"]{max-height:calc(100dvh - 28px - var(--fabh,76px))}
+  .wrap{padding-bottom:calc(var(--fabh,76px) + 24px)}
 }
 @media (orientation:landscape) and (min-width:700px) and (max-height:560px){
-  .grid2>.lcol>section[aria-labelledby="sh"]{top:8px;max-height:calc(100dvh - 16px)}
+  .grid2>.lcol>section[aria-labelledby="sh"]{top:8px;max-height:calc(100dvh - 16px - var(--fabh,76px))}
   .grid2>.lcol>section[aria-labelledby="sh"] .chd{padding:10px 14px 4px;gap:4px 8px}
   .grid2>.lcol>section[aria-labelledby="sh"] .chd h2{font-size:20px;white-space:nowrap}
   .grid2>.lcol>section[aria-labelledby="sh"] .cnt{font-size:13px;white-space:nowrap}
